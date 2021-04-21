@@ -15,5 +15,27 @@
                 "<node_internals>/**"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "npm build",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "build"],
+            "port": 9230,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "npm start",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["start"],
+            "port": 9231,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
     ]
 }
