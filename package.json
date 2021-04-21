@@ -1,0 +1,16 @@
+{
+  "name": "stag-escapades",
+  "version": "0.1.0",
+  "description": "Digital escape room for West K's 2021 mental health week",
+  "main": "server/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "dotenv node server/server.js"
+  },
+  "author": "Iwaslazkis",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv-cli": "^4.0.0",
+    "express": "^4.17.1"
+  }
+}
