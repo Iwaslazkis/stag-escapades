@@ -13,9 +13,7 @@ app.use((req, res, next) => {
 });
 
 // Static files
-app.get('/', (req, res) => {
-    res.send('Heyo!');
-});
+app.use(express.static('public'));
 
 app.listen(port, host,  () => {
     console.log(`Listening on http://${host}:${port}/`);
