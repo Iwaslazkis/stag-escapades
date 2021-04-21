@@ -1,11 +1,19 @@
 <script>
 	import { scene } from "./stores.js";
+	import Animation from "./animation.svelte";
+
+	function jumper(e) {
+		if (!($scene.currLine[1] === "puzzle")) {
+			scene.jumpLines()
+		}
+	};
 </script>
 
 <style>
 	main {
-		max-width: 240px;
-		margin: 0 auto;
+		position: relative;
+		width: 100%;
+		height: 100%;
 	}
 
 	h1 {
@@ -15,6 +23,16 @@
 		font-weight: 100;
 	}
 
+	.bubble {
+		position: absolute;
+		top: 0%;
+		width: calc(100% - 2vw);
+		margin: 1.5vh 1vw auto;
+		border: 1px solid hsla(0, 0.00%, 78.00%, 1.00);
+		border-radius: 14px;
+		background-image: linear-gradient(to bottom, white, hsla(0, 0.00%, 86.00%, 1.00));
+	}
+
 	@media (min-width: 640px) {
 		main {
 			max-width: none;
@@ -22,9 +40,13 @@
 	}
 </style>
 
-<main>
-	<h1>{$scene.currLine[$scene.currLine.length - 1]}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<button on:click={() => {scene.jumpLines()}}>Update Line</button>
+<main on:click={jumper}>
+	<Animation/>
+	{#if !($scene.currLine[0] === "")}
+		<div class="bubble">
+			<h1>{$scene.currLine[0]}!</h1>
+			<!-- <button on:click={() => {scene.jumpLines()}}>Update Line</button> -->
+		</div>
+	{/if}
 </main>
 

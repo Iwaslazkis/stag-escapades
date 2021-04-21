@@ -3,22 +3,27 @@ const scenes = [
         id: 0,
         name: "room 1",
         lines: 
-        [ // [animation/component, "SPEAKER: line"?]
-            ["walk-in"],
-            ["neutral", "CUBERT: Hey, you parsed me right!"],
-            ["neutral", "CUBERT: That's one thing down"],
-            ["smiles", "CUBERT: Now keep going, you don't have much time"]
+        [ // ["SPEAKER: line" | "", animation/component]
+            ["", "walk-in"],
+            ["CUBERT: Hey, you parsed me right!", "neutral"],
+            ["CUBERT: That's one thing down", "neutral"],
+            ["CUBERT: Now keep going, you don't have much time", "smiles"],
+            ["", "puzzle", {
+                image: "/pics/puzzle1.png",
+                prompt: "What do you think this means?",
+                answer: "AEFH"
+            }]
         ]
     },
     {
         id: 1,
         name: "room 2",
         lines: 
-        [ // [animation/component, "SPEAKER: line"?]
-            ["walk-in"],
-            ["neutral", "CUBERT: Hey, room 2 came in! So the store was setup right too!"],
-            ["neutral", "CUBERT: That's one thing down"],
-            ["smiles", "CUBERT: Now keep going, you don't have much time"]
+        [ // ["SPEAKER: line" | "", animation/component]
+            ["", "walk-in"],
+            ["CUBERT: Hey, room 2 came in! So the store was setup right too!", "neutral"],
+            ["CUBERT: That's one thing down", "neutral"],
+            ["CUBERT: Now keep going, you don't have much time", "smiles"]
         ]
     },
 ];
