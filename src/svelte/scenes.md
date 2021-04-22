@@ -90,7 +90,31 @@ I found a small balloon repair shop just over that way
 #Worried
 The only problem is that there's just a small... giant ravine in between us and the shop
 
+#Happy
+But not to worry! I can send you some pieces to build a bridge
 
+#Encouraging
+You will have to work together to build that bridge as fast as you can
 
+#Activity PositiveSocial
 
+#PUZZLE: 2
+
+#Happy
+Good work! Now let's head inside and repair Puzloonie
+
+#Happy
+Oh there's a sign on the door
+
+#Reading
+...............
+
+#Shocked
+OH NO! They are closed on fridays from 9:45 to 10:30
+
+#Sad
+Which is commonly know throughout the 7oaks school division as period B
+
+#Thinking
+Ok, ok don't panic... here go through this door while I think of something
 
