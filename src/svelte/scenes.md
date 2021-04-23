@@ -1,12 +1,10 @@
-#Activity: Door1
-
-#SCENE: room 1
+#SCENE: intro
 
 #Startled
 Woah there pal, you startled me
 
 #Happy
-I was just on my way to go see my friend puzloonie
+I was just on my way to go see my friend Puzzloonie
 
 #Happy
 I wanted to talk to him about how it's mental health week
@@ -17,7 +15,7 @@ It's all about taking care of ourselves and others
 #Happy
 Anyway have you seen him, he looks like this
 
-#ShowPicture
+#PICTURE: puzzloonie.png
 
 #happy
 He likes to spend his time on tables in schools around sharp objects
@@ -31,12 +29,12 @@ Well there must be something we can do to help him
 #Encouraging
 Here go through this door while I think of something we can do
 
-#Activity: Door2
+#PUZZLE: door 1
 
-#SCENE: room 2
+#SCENE: room 1
 
 #ReadingWhileTalking
-Alright I have searched the limits of human information on sickness
+Alright, I have searched the limits of human knowledge on sickness
 
 #Happy
 And it appears that there seems to be one universal cure
@@ -45,19 +43,17 @@ And it appears that there seems to be one universal cure
 Chicken noodle soup!
 
 #Curious
-I'm pretty sure I had seen some in your classroom
+I'm pretty sure I had seen some ingredients for it in your classroom
 
 #Happy
-Find it and put some in a pot for puzloonie
+Find them, and make some chicken noodle soup for Puzzloonie!
 
 #ACTIVITY: ActiveCurious
-
-#PUZZLE: 1
 
 #happy
 Great! Now let's give some of that delicious soup to my friend
 
-#ShowPicture2 (Pouring soup on balloon?)
+#PICTURE: soupOnBalloonQuestionMark
 
 #Happy
 See he's looking better already...
@@ -69,17 +65,17 @@ See he's looking better already...
 .........
 
 #Sad
-Ok that didn't work
+Ok so that didn't work
 
 #hopeful
-But don't worry I have another Idea
+But don't worry I have another idea
 
 #Encouraging
 Here go through this door and I'll tell you about it
 
-#Activity: Door3
+#PUZZLE: door 2
 
-#Scene3
+#SCENE: room 2
 
 #Happy
 After looking through the knowledge of the worlds once more I have a new plan
@@ -94,14 +90,12 @@ The only problem is that there's just a small... giant ravine in between us and 
 But not to worry! I can send you some pieces to build a bridge
 
 #Encouraging
-You will have to work together to build that bridge as fast as you can
+You will have to work together to build that bridge as fast as you can!
 
-#Activity PositiveSocial
-
-#PUZZLE: 2
+#ACTIVITY: PositiveSocial
 
 #Happy
-Good work! Now let's head inside and repair Puzloonie
+Good work! Now let's head inside and repair Puzzloonie
 
 #Happy
 Oh there's a sign on the door
@@ -117,4 +111,8 @@ Which is commonly know throughout the 7oaks school division as period B
 
 #Thinking
 Ok, ok don't panic... here go through this door while I think of something
+
+#PUZZLE: door 3
+
+#SCENE: room 3
 
