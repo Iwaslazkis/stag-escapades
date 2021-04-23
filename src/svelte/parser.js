@@ -10,25 +10,37 @@ let parsed = [];
 let id = 0;
 
 md
+    .trim()
     .split('\n\n')
     .forEach( (el, i, arr) => {
         const matched = el.match(/#(.+): (.*)/);
-        console.log(config.activity("hi"));
         if (el.startsWith('#SCENE:')) {
             let scene = {
                 id: id,
                 name: el.substring(8),
                 lines: []
             };
-
+            
             parsed.push(scene);
             id++;
-        } else if (el.match(/#.+: .*/)) {
-            //const line = ["", matched[2], config[matched[1]](matched[2])];
-            parsed[parsed.length - 1].lines.push(matched[1]);
+        } else if (matched !== null && matched !== undefined) {
+            console.log(matched);
+            const line = ["", matched[1].toLowerCase(), config[matched[1].toLowerCase()](matched[2])];
+            parsed[parsed.length - 1].lines.push(line);
         } else {
-            parsed[parsed.length - 1].lines.push(el);
+            let line = el.split('\n').reverse();
+            line[1] = line[1].replace("#", "").toLowerCase();
+            parsed[parsed.length - 1].lines.push(line);
         }
     })
 
-console.log(parsed);
+export default parsed;
+// Check parser:
+// for (let index = 0; index < parsed.length; index++) {
+//     const scenes = parsed[index];
+//     console.log(scenes);
+//     for (let i2 = 0; i2 < scenes["lines"].length; i2++) {
+//         const line = scenes["lines"][i2];
+//         console.log(line);
+//     }
+// }

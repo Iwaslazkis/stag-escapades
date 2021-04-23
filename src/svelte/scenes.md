@@ -15,7 +15,7 @@ It's all about taking care of ourselves and others
 #Happy
 Anyway have you seen him, he looks like this
 
-#PICTURE: puzzloonie.png
+#PICTURE: puzzloonie
 
 #happy
 He likes to spend his time on tables in schools around sharp objects
