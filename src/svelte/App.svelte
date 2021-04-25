@@ -44,8 +44,7 @@
 	<Animation/>
 	{#if !($scene.currLine[0] === "")}
 		<div class="bubble">
-			<h1>{$scene.currLine[0]}!</h1>
-			<!-- <button on:click={() => {scene.jumpLines()}}>Update Line</button> -->
+			<h1>{$scene.currLine[0]}</h1>
 		</div>
 	{/if}
 </main>

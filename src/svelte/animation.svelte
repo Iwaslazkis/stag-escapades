@@ -34,9 +34,9 @@
         margin-right: 3px;
     }
 
-    input.submit {
+    /* input.submit {
 
-    }
+    } */
 </style>
 
 {#if $scene.currLine[1] === "walk-in"}
@@ -52,7 +52,7 @@
             <button class="submit" on:click={checker}>Try it</button>
         </form>
     </section>
-{:else}
+<!-- {:else} -->
 
 {/if}
 
