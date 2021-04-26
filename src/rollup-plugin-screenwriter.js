@@ -1,7 +1,6 @@
 import { createFilter } from "rollup-pluginutils";
 
 function parse (script, config) {
-  console.log("screenwriter.js was reloaded (I think?)");
   let parsed = [];
   let id = 0;
 

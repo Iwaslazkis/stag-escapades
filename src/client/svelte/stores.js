@@ -1,9 +1,11 @@
 import script from "../script.md";
-console.log(script);
 
-let current = script[0];
-current.currLine = current.lines[0];
-current.currLineID = 0;
+let current = {
+  ...script[0],
+  currLine: script[0].lines[0],
+  currLineID: 0
+};
+console.log(script, current);
 
 let subscribers = [];
 function notify(curr) {
@@ -28,9 +30,13 @@ export const act = {
 
     if (remainder > 0) {
       //Switch acts if lines overflowed
-      current = script[script.indexOf(currAct) + 1];
-      current.currLine = current.lines[remainder - 1];
-      current.currLineID = remainder - 1;
+      debugger;
+      current = {
+        ...script[script.indexOf(currAct) + 1],
+        currLine: current.lines[remainder - 1],
+        currLineID: remainder - 1
+      };
+      console.log(script, current);
     } else {
       current.currLine = current.lines[current.currLineID];
     }
