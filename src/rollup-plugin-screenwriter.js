@@ -4,24 +4,24 @@ function parse (script, config) {
   console.log("screenwriter.js was reloaded (I think?)");
   let parsed = [];
   let id = 0;
-  
+
   script
   .trim()
   .split('\n\n')
   .forEach( (el, i, arr) => {
     const matched = el.match(/#(.+): (.*)/);
-    
-    // New Act (#ACT: ...) 
+
+    // New Act (#ACT: ...)
     if (el.startsWith('#ACT:')) {
       let act = {
         id: id,
         name: el.substring('#ACT: '.length),
         lines: []
       };
-      
+
       parsed.push(act);
       id++;
-      
+
       // New Scene (#<SCENETYPE>: [options])
     } else if (matched !== null && matched !== undefined) {
       let options;
@@ -29,7 +29,7 @@ function parse (script, config) {
       catch { throw Error(`Scene type ${matched[1].toUpperCase()} is not defined`); }
       const scene = ["", matched[1].toLowerCase(), options];
       parsed[parsed.length - 1].lines.push(scene);
-      
+
       // New Line (#<Emotion>\n<Line>)
     } else {
       let line = el.split('\n').reverse();
@@ -46,10 +46,10 @@ function parse (script, config) {
 export default function (opts = {}) {
   opts.include = opts.include ? opts.include : './**/script.md';
   const filter = createFilter(opts.include, opts.exclude);
-  
+
   return {
     name: "screenwriter",
-    
+
     transform(code, id) {
       // debugger;
       if (filter(id)) {
