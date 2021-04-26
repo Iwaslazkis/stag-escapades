@@ -1,7 +1,7 @@
 #ACT: intro
 
 #Startled
-Woah there pal, you startled me
+Woah there pal, you startled me!
 
 #Happy
 I was just on my way to go see my friend Puzzloonie

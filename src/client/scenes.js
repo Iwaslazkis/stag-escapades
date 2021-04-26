@@ -1,8 +1,8 @@
 export default {
-    activity (arg) {
+    activity(arg) {
         return {activity: arg};
     },
-    puzzle (arg) {
+    puzzle(arg) {
         return {
             image: "/pics/puzzle1.png",
             prompt: "What do you think this means?",
@@ -15,4 +15,3 @@ export default {
         }
     }
 };
-

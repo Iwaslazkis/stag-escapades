@@ -1,6 +1,6 @@
 <script>
 	import { act } from "./stores.js";
-	import Animation from "./animation.svelte";
+	import Animation from "./emotion/animation.svelte";
 
 	function jumper(e) {
 		if (!($act.currLine[1] === "puzzle")) {

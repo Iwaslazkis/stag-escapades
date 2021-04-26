@@ -4,7 +4,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
-import screenwriter from "./src/svelte/rollup-plugin-screenwriter.js";
+import screenwriter from "./src/rollup-plugin-screenwriter.js";
+import scenesConfig from "./src/client/scenes.js";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -30,7 +31,7 @@ function serve() {
 }
 
 export default {
-    input: 'src/client.js',
+    input: 'src/client/client.js',
     output: {
         sourcemap: true,
         format: 'iife',
@@ -49,26 +50,7 @@ export default {
         css({ output: 'bundle.css' }),
         
         // Parse scene.md file into the stores.js file
-        screenwriter({
-            scenes: 
-            {
-                activity(arg) {
-                    return {activity: arg};
-                },
-                puzzle(arg) {
-                    return {
-                        image: "/pics/puzzle1.png",
-                        prompt: "What do you think this means?",
-                        answer: "AEFH"
-                    }
-                },
-                picture(arg) {
-                    return {
-                        image: `pics/${arg}.png`
-                    }
-                }
-            }
-        }),
+        screenwriter({ scenes: scenesConfig }),
         
         // If you have external dependencies installed from
         // npm, you'll most likely need these plugins. In

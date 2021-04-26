@@ -1,4 +1,4 @@
-import script from "./script.md";
+import script from "../script.md";
 console.log(script);
 
 let current = script[0];

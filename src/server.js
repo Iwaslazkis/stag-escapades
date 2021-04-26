@@ -8,7 +8,7 @@ app.use((req, res, next) => {
     console.log("\x1b[32m" + req.url, 
                 "\x1b[36m" + new Date(),
                 "\x1b[0m");
-    console.log(req);
+    // console.log(req);
     next();
 });
 
