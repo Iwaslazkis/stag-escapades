@@ -1,11 +1,11 @@
 <script>
-    import { scene } from "./stores.js";
+    import { act } from "./stores.js";
 
     let guess;
     function checker(e) {
         e.preventDefault();
-        if (guess.toUpperCase() === $scene.currLine[2].answer) {
-            scene.jumpLines();
+        if (guess.toUpperCase() === $act.currLine[2].answer) {
+            act.jumpLines();
         }
     }
 
@@ -39,14 +39,14 @@
     } */
 </style>
 
-{#if $scene.currLine[1] === "walk-in"}
+{#if $act.currLine[1] === "walk-in"}
     <section>
         <img src="/pics/tempcubert.png" alt="walk">
     </section>
-{:else if $scene.currLine[1] === "puzzle"}
+{:else if $act.currLine[1] === "puzzle"}
     <section>
-        <img src={$scene.currLine[2].image} alt="puzzle">
-        <h2>{$scene.currLine[2].prompt}</h2>
+        <img src={$act.currLine[2].image} alt="puzzle">
+        <h2>{$act.currLine[2].prompt}</h2>
         <form action="">
             <input class="text" type="text" name="" id="" bind:value={guess}>
             <button class="submit" on:click={checker}>Try it</button>

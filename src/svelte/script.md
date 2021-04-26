@@ -1,4 +1,4 @@
-#SCENE: intro
+#ACT: intro
 
 #Startled
 Woah there pal, you startled me
@@ -31,7 +31,7 @@ Here go through this door while I think of something we can do
 
 #PUZZLE: door 1
 
-#SCENE: room 1
+#ACT: room 1
 
 #ReadingWhileTalking
 Alright, I have searched the limits of human knowledge on sickness
@@ -75,7 +75,7 @@ Here go through this door and I'll tell you about it
 
 #PUZZLE: door 2
 
-#SCENE: room 2
+#ACT: room 2
 
 #Happy
 After looking through the knowledge of the worlds once more I have a new plan
@@ -114,5 +114,5 @@ Ok, ok don't panic... here go through this door while I think of something
 
 #PUZZLE: door 3
 
-#SCENE: room 3
+#ACT: room 3
 

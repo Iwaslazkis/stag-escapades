@@ -1,10 +1,10 @@
 <script>
-	import { scene } from "./stores.js";
+	import { act } from "./stores.js";
 	import Animation from "./animation.svelte";
 
 	function jumper(e) {
-		if (!($scene.currLine[1] === "puzzle")) {
-			scene.jumpLines()
+		if (!($act.currLine[1] === "puzzle")) {
+			act.jumpLines()
 		}
 	};
 </script>
@@ -42,9 +42,9 @@
 
 <main on:click={jumper}>
 	<Animation/>
-	{#if !($scene.currLine[0] === "")}
+	{#if !($act.currLine[0] === "")}
 		<div class="bubble">
-			<h1>{$scene.currLine[0]}</h1>
+			<h1>{$act.currLine[0]}</h1>
 		</div>
 	{/if}
 </main>
