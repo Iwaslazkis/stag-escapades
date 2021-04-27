@@ -5,7 +5,7 @@ const app = express();
 const wss = new WebSocket.Server({ noServer: true, path: '/ws' });
 const port = +process.env.PORT;
 const host = process.env.LOCALIP;
-const sessions = [];
+const sessions = []; // { session: string, main: WebSocket, phones: WebSocket[] }[]
 
 // Source: https://medium.com/developers-tomorrow/understanding-how-cookie-and-session-in-javascript-3af858fa8112
 function parseCookies (cookie = '') {
@@ -69,9 +69,12 @@ const server = app.listen(port, host, () => {
 //WebSocket Server
 wss.on('connection',(socket, req) => {
   const cookie = parseCookies(req.headers.cookie).session;
+  const timestamp = new Date();
   sessions.push({
     session: cookie,
-    socket: socket
+    timestamp: timestamp,
+    main: socket,
+    phones: []
   });
 
   //Logging
@@ -88,11 +91,16 @@ wss.on('connection',(socket, req) => {
     console.log(`\x1b[33m${cookie} sent: \x1b[31m${message}\x1b[0m`);
 
     socket.send(`You sent ${message}`);
-  })
+  });
+
+  socket.on("close", (code, reason) => {
+    console.log(`\x1b[33m${cookie} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
+    const index = sessions.findIndex(session => session.timestamp === timestamp);
+    if (index > -1) sessions.splice(index, 1);
+  });
 });
 
 server.on('upgrade', (req, socket, head) => {
-  //const pathname;
   wss.handleUpgrade(req, socket, head, socket => {
     wss.emit('connection', socket, req);
   });

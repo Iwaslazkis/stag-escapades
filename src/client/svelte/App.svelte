@@ -1,6 +1,8 @@
 <script>
+  import { setContext } from "svelte";
   import { act } from "./stores.js";
   import Animation from "./emotion/Animation.svelte";
+
 
   const ws = new WebSocket('ws://REPLACE_HOSTNAME/ws');
   ws.addEventListener("open", (e) => {
@@ -10,10 +12,11 @@
   ws.addEventListener("message", (e) => {
     console.log("Message received:", e.data);
   });
+  setContext('main', { getWs: () => ws })
 
   function jumper(e) {
-    ws.send($act.currLine[1]);
-    if (!($act.currLine[1] === "puzzle")) {
+    ws.send(`Jumped from: Scene ID ${$act.id}, Line ID ${$act.currLineID}`);
+    if (!($act.currLine[1] === "puzzle" || $act.currLine[1] == "activity")) {
       act.jumpLines();
     }
   };
