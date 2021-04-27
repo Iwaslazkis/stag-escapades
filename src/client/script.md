@@ -1,6 +1,6 @@
 #ACT: intro
 
-#ACTIVITY: ActiveCurious
+#Puzzle: Door1
 
 #Startled
 Woah there pal, you startled me!
@@ -31,7 +31,7 @@ Well there must be something we can do to help him
 #Encouraging
 Here go through this door while I think of something we can do
 
-#PUZZLE: door 1
+#PUZZLE: Door2
 
 #ACT: room 1
 
@@ -75,7 +75,7 @@ But don't worry I have another idea
 #Encouraging
 Here go through this door and I'll tell you about it
 
-#PUZZLE: door 2
+#PUZZLE: Door3
 
 #ACT: room 2
 
@@ -114,7 +114,29 @@ Which is commonly know throughout the 7oaks school division as period B
 #Thinking
 Ok, ok don't panic... here go through this door while I think of something
 
-#PUZZLE: door 3
+#PUZZLE: Door4
 
 #ACT: room 3
 
+#Panicing
+So we just need to uhhh... no that won't work
+
+#Panicing
+What about umm... that doesn't work either
+
+#Panicing
+Ok I just need to... I uh... I
+
+#Defeated
+I don't know what to do
+
+#Sad
+What can I do at this point
+
+#Sad
+I can't think of anything
+
+#Sad
+I could really use some cheering up
+
+#Activity: MindfulPurposeful 
