@@ -1,5 +1,6 @@
 import express from 'express';
 import WebSocket from "ws";
+import fs from "fs";
 
 const app = express();
 const wss = new WebSocket.Server({ noServer: true, path: '/ws' });
@@ -58,6 +59,29 @@ app.post("/", (req, res) => {
   });
   res.end();
 });
+
+// Phone links
+app.get('/:cookie([0-9]+)/:event', (req, res) => {
+  const { cookie, event } = req.params;
+  switch (event) {
+    case "pot":
+    case "chicken":
+    case "noodles":
+    case "broth":
+    case "water": {
+      fs.readFile("public/activity/activeCurious.html", "utf8", (err, data) => {
+        if (err) throw err;
+        res.send(data);
+      })
+      break;
+    }
+    default: {
+      res.status(404).send("404: Wrong link!");
+      break;
+    }
+  }
+});
+
 
 // Static files
 app.use(express.static('public'));

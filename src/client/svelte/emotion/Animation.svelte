@@ -1,6 +1,5 @@
 <script>
-  import { } from "node:os";
-import { act } from "../stores.js";
+  import { act } from "../stores.js";
 
   let guess;
   function checker(e) {
