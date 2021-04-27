@@ -2,9 +2,19 @@
   import { act } from "./stores.js";
   import Animation from "./emotion/Animation.svelte";
 
+  const ws = new WebSocket('ws://localhost:3000/ws');
+  ws.addEventListener("open", (e) => {
+    ws.send('Connection started');
+  });
+
+  ws.addEventListener("message", (e) => {
+    console.log("Message received:", e.data);
+  });
+
   function jumper(e) {
+    ws.send($act.currLine[1]);
     if (!($act.currLine[1] === "puzzle")) {
-      act.jumpLines()
+      act.jumpLines();
     }
   };
 </script>
