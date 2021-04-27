@@ -38,9 +38,6 @@ const basePlugins = [
       dev: !production
     }
   }),
-  // we'll extract any component CSS out into
-  // a separate file - better for performance
-  css({ output: 'game.css' }),
 
   // Parse scene.md file into the stores.js file
   screenwriter({ scenes: scenesConfig }),
@@ -82,6 +79,9 @@ export default [
   },
   plugins: [
     ...basePlugins,
+    // we'll extract any component CSS out into
+    // a separate file - better for performance
+    css({ output: 'game.css' }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated
@@ -99,7 +99,13 @@ export default [
     name: 'app',
     file: 'public/build/login.js'
   },
-  plugins: basePlugins,
+  plugins: [
+    ...basePlugins,
+
+    // we'll extract any component CSS out into
+    // a separate file - better for performance
+    css({ output: 'login.css' }),
+  ],
   watch: {
     clearScreen: false
   }
@@ -112,7 +118,13 @@ export default [
     name: 'app',
     file: 'public/build/activeCurious.js'
   },
-  plugins: basePlugins,
+  plugins: [
+    ...basePlugins,
+
+    // we'll extract any component CSS out into
+    // a separate file - better for performance
+    css({ output: 'activeCurious.css' }),
+  ],
   watch: {
     clearScreen: false
   }

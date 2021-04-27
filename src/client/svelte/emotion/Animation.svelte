@@ -66,6 +66,8 @@
   }
 
   img.item {
+    max-width: 100%;
+    max-height: 100%;
     grid-area: var(--item);
     align-self: center;
     justify-self: center;
@@ -100,7 +102,7 @@
     </p>
     <div class="items">
       {#each found as type}
-        <img class="item" style="--item:{type}" src="/pics/tempcubert.png" alt="{type} found">
+        <img class="item" style="--item:{type}" src="/pics/chicken.png" alt="{type} found">
       {/each}
     </div>
   </div>

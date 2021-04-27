@@ -1,9 +1,11 @@
 import express from 'express';
 import WebSocket from "ws";
 import fs from "fs";
+import qs from "querystring";
 
 const app = express();
-const wss = new WebSocket.Server({ noServer: true, path: '/ws' });
+const wsMain = new WebSocket.Server({ noServer: true, path: '/ws' });
+const wsActiveCurious = new WebSocket.Server({ noServer: true, path: '/ws/ActiveCurious' });
 const port = +process.env.PORT;
 const host = process.env.LOCALIP;
 const sessions = []; // { session: string, main: WebSocket, phones: WebSocket[] }[]
@@ -43,7 +45,7 @@ app.use((req, res, next) => {
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
   console.log({ cookies: cookies, request: req });
-  console.log({ sessions: sessions, "wss.clients": wss.clients });
+  console.log({ sessions: sessions, "ws.clients": wsMain.clients });
   next();
 });
 
@@ -52,7 +54,7 @@ app.post("/", (req, res) => {
   const expires = new Date();
   expires.setHours(expires.getHours() + 2);
 
-  console.log(`\x1b[35m Room ${encodeURIComponent(req.body["room"])} started a game!`);
+  console.log(`\x1b[35mRoom ${encodeURIComponent(req.body["room"])} started a game!`);
   res.writeHead(302, {
     Location: '/game',
     'Set-Cookie': `session=${encodeURIComponent(req.body["room"])};Expires=${expires.toGMTString()};`
@@ -61,14 +63,24 @@ app.post("/", (req, res) => {
 });
 
 // Phone links
-app.get('/:cookie([0-9]+)/:event', (req, res) => {
-  const { cookie, event } = req.params;
+app.get('/:main([0-9]+)/:event', (req, res) => {
+  const { main, event } = req.params;
   switch (event) {
     case "pot":
     case "chicken":
     case "noodles":
     case "broth":
     case "water": {
+      if (sessions.find(session => session.session === main) === undefined) {
+        res.status(404).send("<h1>Wait until your class starts the game!</h1>");
+        break;
+      }
+
+      const expires = new Date();
+      expires.setHours(expires.getHours() + 2);
+
+      // res.writeHead(200, {'Set-Cookie': `main=${encodeURIComponent(main)};Expires=${expires.toGMTString()};`});
+
       fs.readFile("public/activity/activeCurious.html", "utf8", (err, data) => {
         if (err) throw err;
         res.send(data);
@@ -76,7 +88,7 @@ app.get('/:cookie([0-9]+)/:event', (req, res) => {
       break;
     }
     default: {
-      res.status(404).send("404: Wrong link!");
+      res.status(404).send("<h1>Wrong link!</h1>");
       break;
     }
   }
@@ -90,42 +102,97 @@ const server = app.listen(port, host, () => {
   console.log(`Listening on http://${host}:${port}/`);
 });
 
-//WebSocket Server
-wss.on('connection',(socket, req) => {
-  const cookie = parseCookies(req.headers.cookie).session;
+
+
+
+//Main WebSocket Server
+wsMain.on('connection', (socket, req) => {
+  const cookies = parseCookies(req.headers.cookie);
   const timestamp = new Date();
   sessions.push({
-    session: cookie,
+    session: cookies.session,
     timestamp: timestamp,
     main: socket,
     phones: []
   });
+  const currSession = sessions.find(session => session.timestamp === timestamp);
 
   //Logging
-  console.log("\x1b[33m" + cookie + " connected a WS on:",
+  console.log("\x1b[33m" + cookies.session + " connected a WS on:",
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
   console.log({ request: req, socket: socket });
-  console.log({ sessions: sessions, "wss.clients": wss.clients });
+  console.log({ sessions: sessions, "ws.clients": wsMain.clients });
 
 
   socket.on('message', message => {
     // Logging
-    console.log(`\x1b[33m${cookie} sent: \x1b[31m${message}\x1b[0m`);
+    console.log(`\x1b[33m${cookies.session} sent: \x1b[31m${message}\x1b[0m`);
 
-    socket.send(`You sent ${message}`);
+    for (const phone of currSession.phones) {
+      phone.send(message);
+    };
   });
 
+  // Remove from sessions when WebSocket closes
   socket.on("close", (code, reason) => {
-    console.log(`\x1b[33m${cookie} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
+    console.log(`\x1b[33m${cookies.session} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
     const index = sessions.findIndex(session => session.timestamp === timestamp);
     if (index > -1) sessions.splice(index, 1);
   });
 });
 
-server.on('upgrade', (req, socket, head) => {
-  wss.handleUpgrade(req, socket, head, socket => {
-    wss.emit('connection', socket, req);
+// ActiveCurious WebSocket Server
+wsActiveCurious.on('connection', (socket, req) => {
+  const cookies = parseCookies(req.headers.cookie);
+  const query = req.url.includes("?") ? qs.parse(req.url.substring(req.url.indexOf("?") + 1)) : qs.parse("");
+  const currSession = sessions.find(session => session.session === query.main);
+  currSession.phones.push(socket);
+
+  //Logging
+  console.log("\x1b[33m Mobile connected to " + query.main + " with a WS on:",
+              "\x1b[32m" + req.url,
+              "\x1b[36m" + formattedDate(),
+              "\x1b[0m");
+  console.log({ request: req, socket: socket });
+  console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+
+
+  socket.on('message', message => {
+    // Logging
+    console.log(`\x1b[33mMobile of ${query.main} sent: \x1b[31m${message}\x1b[0m`);
+
+    currSession.main.send(message);
   });
+
+  // Remove from phone from sessions when WebSocket closes
+  socket.on("close", (code, reason) => {
+    console.log(`\x1b[33mMobile of ${query.main} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
+    const index = currSession.phones.findIndex(ws => ws === socket);
+    if (index > -1) currSession.phones.splice(index, 1);
+    console.log(currSession, sessions)
+  });
+});
+
+
+// Route WebSocket Servers
+server.on('upgrade', (req, socket, head) => {
+  const pathname = req.url.includes("?") ? req.url.substring(0, req.url.indexOf("?")) : req.url;
+  switch (pathname) {
+    case "/ws": {
+      wsMain.handleUpgrade(req, socket, head, socket => {
+        wsMain.emit('connection', socket, req);
+      });
+      break;
+    }
+    case "/ws/ActiveCurious": {
+      wsActiveCurious.handleUpgrade(req, socket, head, socket => {
+        wsActiveCurious.emit('connection', socket, req);
+      });
+      break;
+    }
+    default:
+      break;
+  }
 });
