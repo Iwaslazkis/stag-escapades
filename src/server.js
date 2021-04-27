@@ -32,11 +32,17 @@ app.use(express.urlencoded({
 
 // Logging
 app.use((req, res, next) => {
-  console.log("\x1b[32m" + req.url,
+  const cookies = parseCookies(req.headers.cookie);
+  let noCookies = Object.entries(cookies);
+  if (noCookies.length === 1) {
+    noCookies = (noCookies[0][0] === '' && noCookies[0][0] === noCookies[0][1]) ? true : false;
+  };
+  console.log(noCookies ? "" : `\x1b[35m${cookies.session}:`,
+              "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
-  console.log(parseCookies(req.headers.cookie), req);
-  console.log(sessions, wss.clients);
+  console.log({ cookies: cookies, request: req });
+  console.log({ sessions: sessions, "wss.clients": wss.clients });
   next();
 });
 
@@ -45,8 +51,7 @@ app.post("/", (req, res) => {
   const expires = new Date();
   expires.setHours(expires.getHours() + 2);
 
-  console.log(req.body);
-  console.log(encodeURIComponent(req.body["room"]));
+  console.log(`\x1b[35m Room ${encodeURIComponent(req.body["room"])} started a game!`);
   res.writeHead(302, {
     Location: '/game',
     'Set-Cookie': `session=${encodeURIComponent(req.body["room"])};Expires=${expires.toGMTString()};`
@@ -57,27 +62,31 @@ app.post("/", (req, res) => {
 // Static files
 app.use(express.static('public'));
 
-const server = app.listen(port, () => {
+const server = app.listen(port, host, () => {
   console.log(`Listening on http://${host}:${port}/`);
 });
 
 //WebSocket Server
 wss.on('connection',(socket, req) => {
   const cookie = parseCookies(req.headers.cookie).session;
-  //Logging
-  console.log("\x1b[33m" + cookie + " connected on:",
-              "\x1b[32m" + req.url,
-              "\x1b[36m" + formattedDate(),
-              "\x1b[0m");
-  console.log(req, socket);
-
   sessions.push({
     session: cookie,
     socket: socket
   });
 
+  //Logging
+  console.log("\x1b[33m" + cookie + " connected a WS on:",
+              "\x1b[32m" + req.url,
+              "\x1b[36m" + formattedDate(),
+              "\x1b[0m");
+  console.log({ request: req, socket: socket });
+  console.log({ sessions: sessions, "wss.clients": wss.clients });
+
+
   socket.on('message', message => {
-    console.log(`\x1b[33m${cookie} says: \x1b[31m${message}\x1b[0m`);
+    // Logging
+    console.log(`\x1b[33m${cookie} sent: \x1b[31m${message}\x1b[0m`);
+
     socket.send(`You sent ${message}`);
   })
 });

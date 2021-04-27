@@ -4,6 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
+import replace from "@rollup/plugin-replace";
 import screenwriter from "./src/rollup-plugin-screenwriter.js";
 import scenesConfig from "./src/client/scenes.js";
 
@@ -53,6 +54,12 @@ export default [
     // Parse scene.md file into the stores.js file
     screenwriter({ scenes: scenesConfig }),
 
+    // Insert hostname in frontend files
+    replace({
+      preventAssignment: true,
+      'REPLACE_HOSTNAME': `${process.env.LOCALIP}:${process.env.PORT}`
+    }),
+
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
     // some cases you'll need additional configuration -
@@ -101,6 +108,12 @@ export default [
 
     // Parse scene.md file into the stores.js file
     screenwriter({ scenes: scenesConfig }),
+
+    // Insert hostname in frontend files
+    replace({
+      preventAssignment: true,
+      'REPLACE_HOSTNAME': `${process.env.LOCALIP}:${process.env.PORT}`
+    }),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In

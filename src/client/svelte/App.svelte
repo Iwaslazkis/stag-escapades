@@ -2,7 +2,7 @@
   import { act } from "./stores.js";
   import Animation from "./emotion/Animation.svelte";
 
-  const ws = new WebSocket('ws://localhost:3000/ws');
+  const ws = new WebSocket('ws://REPLACE_HOSTNAME/ws');
   ws.addEventListener("open", (e) => {
     ws.send('Connection started');
   });
