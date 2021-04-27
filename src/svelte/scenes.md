@@ -1,4 +1,4 @@
-#Activity: Door1
+#Puzzle: Door1
 
 #SCENE: room 1
 
@@ -31,7 +31,7 @@ Well there must be something we can do to help him
 #Encouraging
 Here go through this door while I think of something we can do
 
-#Activity: Door2
+#Puzzle: Door2
 
 #SCENE: room 2
 
@@ -51,8 +51,6 @@ I'm pretty sure I had seen some in your classroom
 Find it and put some in a pot for puzloonie
 
 #ACTIVITY: ActiveCurious
-
-#PUZZLE: 1
 
 #happy
 Great! Now let's give some of that delicious soup to my friend
@@ -77,7 +75,7 @@ But don't worry I have another Idea
 #Encouraging
 Here go through this door and I'll tell you about it
 
-#Activity: Door3
+#Puzzle: Door3
 
 #Scene3
 
@@ -98,8 +96,6 @@ You will have to work together to build that bridge as fast as you can
 
 #Activity PositiveSocial
 
-#PUZZLE: 2
-
 #Happy
 Good work! Now let's head inside and repair Puzloonie
 
@@ -117,4 +113,6 @@ Which is commonly know throughout the 7oaks school division as period B
 
 #Thinking
 Ok, ok don't panic... here go through this door while I think of something
+
+#Puzzle: Door4
 
