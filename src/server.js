@@ -3,12 +3,33 @@ import WebSocket from "ws";
 import fs from "fs";
 import qs from "querystring";
 
-const app = express();
-const wsMain = new WebSocket.Server({ noServer: true, path: '/ws' });
-const wsActiveCurious = new WebSocket.Server({ noServer: true, path: '/ws/ActiveCurious' });
-const port = +process.env.PORT;
+
+
+
+
+//=========MAIN CONSTANTS=========
 const host = process.env.LOCALIP;
-const sessions = []; // { session: string, main: WebSocket, phones: WebSocket[] }[]
+const port = +process.env.PORT;
+
+const app = express();
+
+const wsServers = [];
+const wsMain = createWsServer('/ws');
+const wsActiveCurious = createWsServer('/ws/ActiveCurious');
+
+// { session: string, main: WebSocket, phones: WebSocket[] }[]
+const sessions = [];
+
+
+
+
+
+//=========HELPER FUNCTIONS=========
+function createWsServer(path) {
+  const server = new WebSocket.Server({ noServer: true, path: path });
+  wsServers.push({ server: server, path: path });
+  return server;
+};
 
 // Source: https://medium.com/developers-tomorrow/understanding-how-cookie-and-session-in-javascript-3af858fa8112
 function parseCookies (cookie = '') {
@@ -32,7 +53,6 @@ function formattedDate() {
 function bigLog(req, cookOrSocket, mode = 'http') {
   let env = process.env.NODE_ENV;
   if (env !== "production") {env = "development"};
-  console.log(mode + "_" + env);
   switch (mode + "_" + env) {
     case "http_production": {
       console.log({ cookies: cookOrSocket, sessions: sessions });
@@ -55,9 +75,13 @@ function bigLog(req, cookOrSocket, mode = 'http') {
   }
 };
 
-app.use(express.urlencoded({
-  extended: true
-}))
+
+
+
+
+//=========HTTP/EXPRESS=========
+// For adding a req.body to POST requests
+app.use(express.urlencoded({ extended: true }));
 
 // Logging
 app.use((req, res, next) => {
@@ -119,7 +143,6 @@ app.get('/:main([0-9]+)/:event', (req, res) => {
   }
 });
 
-
 // Static files
 app.use(express.static('public'));
 
@@ -131,6 +154,8 @@ const server = app.listen(port, host, () => {
 
 
 
+
+//=========WEBSOCKETS=========
 //Main WebSocket Server
 wsMain.on('connection', (socket, req) => {
   const cookies = parseCookies(req.headers.cookie);
@@ -170,13 +195,12 @@ wsMain.on('connection', (socket, req) => {
 
 // ActiveCurious WebSocket Server
 wsActiveCurious.on('connection', (socket, req) => {
-  const cookies = parseCookies(req.headers.cookie);
   const query = req.url.includes("?") ? qs.parse(req.url.substring(req.url.indexOf("?") + 1)) : qs.parse("");
   const currSession = sessions.find(session => session.session === query.main);
   currSession.phones.push(socket);
 
   //Logging
-  console.log("\x1b[33m Mobile connected to " + query.main + " with a WS on:",
+  console.log("\x1b[33mMobile connected to " + query.main + " with a WS on:",
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
@@ -203,20 +227,9 @@ wsActiveCurious.on('connection', (socket, req) => {
 // Route WebSocket Servers
 server.on('upgrade', (req, socket, head) => {
   const pathname = req.url.includes("?") ? req.url.substring(0, req.url.indexOf("?")) : req.url;
-  switch (pathname) {
-    case "/ws": {
-      wsMain.handleUpgrade(req, socket, head, socket => {
-        wsMain.emit('connection', socket, req);
-      });
-      break;
-    }
-    case "/ws/ActiveCurious": {
-      wsActiveCurious.handleUpgrade(req, socket, head, socket => {
-        wsActiveCurious.emit('connection', socket, req);
-      });
-      break;
-    }
-    default:
-      break;
-  }
+  const wsServer = wsServers.find(server => server.path === pathname).server;
+
+  wsServer.handleUpgrade(req, socket, head, socket => {
+    wsServer.emit('connection', socket, req);
+  });
 });
