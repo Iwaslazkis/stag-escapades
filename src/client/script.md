@@ -140,3 +140,31 @@ I can't think of anything
 I could really use some cheering up
 
 #Activity: MindfulPurposeful
+
+#Sad/Happy
+Well thank you for trying to cheer me up but I'm still upset about
+
+#Action: ShowPuzzloonie
+
+#Shocked
+Puzzloonie!??!!?
+
+#Concerned
+Puzzloonie: Woah Cubert calm down. What's wrong buddy
+
+#Happy
+Cubert: I thought you got popped.
+
+#Confused
+Puzzloonie: What? No, why would you think that?
+
+#Confused
+Puzzloonie: On a separate note have you seen my balloon? I can't find it anywhere.
+
+#Happy
+Cubert: Well I'm glad that you're ok!
+
+#Happy
+Cubert: Come on, let's go home.
+
+#Action: ShowEndScreen
