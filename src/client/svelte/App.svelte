@@ -4,14 +4,33 @@
   import Animation from "./emotion/Animation.svelte";
 
 
-  const ws = new WebSocket('wss://REPLACE_HOSTNAME/ws');
-  ws.addEventListener("open", (e) => {
-    ws.send('Connection started');
+  let ws;
+
+  function wsConnect(socket) {
+    socket = new WebSocket('wss://REPLACE_HOSTNAME/ws');
+
+    socket.addEventListener("open", e => {
+      socket.send('Connection started');
   });
 
-  ws.addEventListener("message", (e) => {
-    console.log("Message received:", e.data);
+    socket.addEventListener("message", e => {
+      console.log("Message received:", e.data);
   });
+
+    socket.addEventListener("close", e => {
+      console.log("WS closed!", e);
+      wsConnect(socket);
+    });
+
+    socket.addEventListener("error", e => {
+      console.log("WS error: ", e);
+      wsConnect(socket);
+    });
+
+  };
+
+  wsConnect(ws);
+
   setContext('main', { getWs: () => ws })
 
   function jumper(e) {
