@@ -13,5 +13,8 @@ export default {
     return {
       image: `pics/${arg}.png`
     }
-  }
+  },
+  action(arg) {
+    return { action: arg }
+  },
 };

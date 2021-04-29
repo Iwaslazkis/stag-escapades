@@ -1,6 +1,6 @@
 #ACT: intro
 
-#Puzzle: Door1
+#PUZZLE: Door1
 
 #Startled
 Woah there pal, you startled me!
@@ -118,13 +118,13 @@ Ok, ok don't panic... here go through this door while I think of something
 
 #ACT: room 3
 
-#Panicing
+#Panicking
 So we just need to uhhh... no that won't work
 
-#Panicing
+#Panicking
 What about umm... that doesn't work either
 
-#Panicing
+#Panicking
 Ok I just need to... I uh... I
 
 #Defeated
@@ -139,12 +139,12 @@ I can't think of anything
 #Sad
 I could really use some cheering up
 
-#Activity: MindfulPurposeful
+#ACTIVITY: MindfulPurposeful
 
 #Sad/Happy
 Well thank you for trying to cheer me up but I'm still upset about
 
-#Action: ShowPuzzloonie
+#ACTION: ShowPuzzloonie
 
 #Shocked
 Puzzloonie!??!!?
@@ -167,4 +167,4 @@ Cubert: Well I'm glad that you're ok!
 #Happy
 Cubert: Come on, let's go home.
 
-#Action: ShowEndScreen
+#ACTION: ShowEndScreen
