@@ -30,7 +30,6 @@ export const act = {
 
     if (remainder > 0) {
       //Switch acts if lines overflowed
-      debugger;
       current = {
         ...script[script.indexOf(currAct) + 1],
         currLine: current.lines[remainder - 1],
