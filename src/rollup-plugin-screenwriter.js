@@ -32,7 +32,6 @@ function parse (script, config) {
       // New Line (#<Emotion>\n<Line>)
     } else {
       let line = el.split('\n').reverse();
-      // debugger;
       line[1] = line[1].replace("#", "").toLowerCase();
       parsed[parsed.length - 1].lines.push(line);
     }
@@ -50,7 +49,6 @@ export default function (opts = {}) {
     name: "screenwriter",
 
     transform(code, id) {
-      // debugger;
       if (filter(id)) {
         return {
           code: `export default ${parse(code, opts.scenes)};`,
