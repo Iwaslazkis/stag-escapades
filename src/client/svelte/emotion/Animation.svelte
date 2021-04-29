@@ -5,11 +5,15 @@
   const { getWs } = getContext('main');
   const ws = getWs();
 
+  let puzzlecheck = "Try it";
+
   let guess;
   function checker(e) {
     e.preventDefault();
     if (guess.toUpperCase() === $act.currLine[2].answer) {
       act.jumpLines();
+    } else {
+      puzzlecheck = "Please try again!";
     }
   }
   let found = [];
@@ -105,11 +109,15 @@
   #potimg {
     height: 400px;
   }
+
+  .cube {
+    margin: 60vh;
+  }
 </style>
 
 {#if $act.currLine[1] === "happy"}
 <section >
-  <img src="/pics/tempcubert.png" alt="walk">
+  <img class="cube" src="/pics/tempcubert.png" alt="walk">
 </section>
 
 
@@ -119,7 +127,7 @@
   <h2>{$act.currLine[2].prompt}</h2>
   <form action="">
     <input class="text" type="text" name="" id="" bind:value={guess}>
-    <button class="submit" on:click={checker}>Try it</button>
+    <button class="submit" on:click={checker}>{puzzlecheck}</button>
   </form>
 </section>
 

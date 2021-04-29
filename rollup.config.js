@@ -45,7 +45,8 @@ const basePlugins = [
   // Insert hostname in frontend files
   replace({
     preventAssignment: true,
-    'REPLACE_HOSTNAME': `${process.env.LOCALIP}:${process.env.PORT}`
+    'REPLACE_HOSTNAME': `${process.env.HOSTNAME}`,
+    'ws://': () => process.env.NODE_ENV === 'production' ? 'wss://' : 'ws://'
   }),
 
   // If you have external dependencies installed from

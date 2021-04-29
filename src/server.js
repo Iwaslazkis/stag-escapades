@@ -29,6 +29,32 @@ function formattedDate() {
   return `${time[0]} ${timezone} ${now.toDateString().substring(4)}`;
 };
 
+function bigLog(req, cookOrSocket, mode = 'http') {
+  let env = process.env.NODE_ENV;
+  if (env !== "production") {env = "development"};
+  console.log(mode + "_" + env);
+  switch (mode + "_" + env) {
+    case "http_production": {
+      console.log({ cookies: cookOrSocket, sessions: sessions });
+      break;
+    }
+    case "ws_production": {
+      console.log({ sessions: sessions });
+      break;
+    }
+    case "http_development": {
+      console.log({ request: req, cookies: cookOrSocket });
+      console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+      break;
+    }
+    case "ws_development": {
+      console.log({ request: req, socket: cookOrSocket });
+      console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+      break;
+    }
+  }
+};
+
 app.use(express.urlencoded({
   extended: true
 }))
@@ -44,8 +70,7 @@ app.use((req, res, next) => {
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
-  console.log({ cookies: cookies, request: req });
-  console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+  bigLog(req, cookies);
   next();
 });
 
@@ -98,6 +123,7 @@ app.get('/:main([0-9]+)/:event', (req, res) => {
 // Static files
 app.use(express.static('public'));
 
+// Start server
 const server = app.listen(port, host, () => {
   console.log(`Listening on http://${host}:${port}/`);
 });
@@ -122,8 +148,7 @@ wsMain.on('connection', (socket, req) => {
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
-  console.log({ request: req, socket: socket });
-  console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+  bigLog(req, socket, "ws");
 
 
   socket.on('message', message => {
@@ -155,8 +180,7 @@ wsActiveCurious.on('connection', (socket, req) => {
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
-  console.log({ request: req, socket: socket });
-  console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+  bigLog(req, socket, "ws");
 
 
   socket.on('message', message => {
