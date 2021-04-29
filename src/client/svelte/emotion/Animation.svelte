@@ -1,21 +1,52 @@
 <script>
+  import { getContext } from "svelte";
   import { act } from "../stores.js";
 
+  const { getWs } = getContext('main');
+  const ws = getWs();
+  
+  let puzzlecheck = "Try it";
+  
   let guess;
   function checker(e) {
     e.preventDefault();
     if (guess.toUpperCase() === $act.currLine[2].answer) {
       act.jumpLines();
+    } else {
+      puzzlecheck = "Please try again!";
     }
   }
+  let found = [];
+  let stirs = 0;
 
-  let found = ["chicken", "pot", "broth", "water", "noodles"];
-
+  ws.addEventListener("message", (event) => {
+    const flag = event.data.split("=");
+    switch (flag[0]) {
+      case "found": {
+        console.log(flag);
+        found = [...found, flag[1]];
+        break;
+        console.log(found);
+      }
+      case "stirStart": {
+        stirs += 1;
+        if (stirs > 4) {
+          act.jumpLines();
+          ws.send("Done");
+        }
+        break;
+      }
+      case "stirStop": {
+        stirs -= 1;
+      }
+      default:
+        break;
+    };
+  });
 </script>
 
 <style>
   section {
-    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -50,6 +81,7 @@
 
   h2 {
     text-align: center;
+    margin: 0;
   }
 
   .items {
@@ -59,24 +91,33 @@
     flex-basis: 0%;
     grid-auto-columns: 1fr;
     grid-column-gap: 16px;
-    grid-row-gap: 16px;
     grid-template-areas: "chicken pot broth" "noodles pot water";
     grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: 50% 50%;
+    height: 40vh;
   }
 
-  img.item {
+  .item {
     max-width: 100%;
     max-height: 100%;
     grid-area: var(--item);
     align-self: center;
     justify-self: center;
+    object-fit: contain;
   }
+
+  #potimg {
+    height: 400px;
+  }
+
+  .cube {
+    margin: 60vh;
+}
 </style>
 
 {#if $act.currLine[1] === "happy"}
-<section>
-  <img src="/pics/tempcubert.png" alt="walk">
+<section >
+  <img class="cube" src="/pics/tempcubert.png" alt="walk">
 </section>
 
 
@@ -86,7 +127,7 @@
   <h2>{$act.currLine[2].prompt}</h2>
   <form action="">
     <input class="text" type="text" name="" id="" bind:value={guess}>
-    <button class="submit" on:click={checker}>Try it</button>
+    <button class="submit" on:click={checker}>{puzzlecheck}</button>
   </form>
 </section>
 
@@ -101,11 +142,16 @@
       begin stirring it in!
     </p>
     <div class="items">
-      {#each found as type}
+      {#each found as type (type)}
         <img class="item" style="--item:{type}" src="/pics/chicken.png" alt="{type} found">
       {/each}
+      <div class="item" style="--item:pot">
+        <h2>Currently stirring: {stirs}</h2>
+        <img src="/pics/chicken.png" alt="Mixing pot" id="potimg">
+      </div>
     </div>
   </div>
 </section>
 {/if}
+
 

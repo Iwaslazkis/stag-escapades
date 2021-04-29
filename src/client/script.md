@@ -1,7 +1,5 @@
 #ACT: intro
 
-#ACTIVITY: ActiveCurious
-
 #Startled
 Woah there pal, you startled me!
 

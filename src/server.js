@@ -44,8 +44,8 @@ app.use((req, res, next) => {
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
-  console.log({ cookies: cookies, request: req });
-  console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+  console.log({ cookies: cookies});//, request: req });
+  console.log({ sessions: sessions});//, "ws.clients": wsMain.clients });
   next();
 });
 
@@ -122,7 +122,7 @@ wsMain.on('connection', (socket, req) => {
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
-  console.log({ request: req, socket: socket });
+  console.log({ request: req});//, socket: socket });
   console.log({ sessions: sessions, "ws.clients": wsMain.clients });
 
 
@@ -155,7 +155,7 @@ wsActiveCurious.on('connection', (socket, req) => {
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
-  console.log({ request: req, socket: socket });
+  console.log({ request: req});//, socket: socket });
   console.log({ sessions: sessions, "ws.clients": wsMain.clients });
 
 
