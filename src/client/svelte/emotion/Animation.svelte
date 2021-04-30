@@ -119,7 +119,7 @@
 
 {#if $act.currLine[1] === "happy"}
 <section >
-  <img class="cube" src="/pics/tempcubert.png" alt="walk">
+  <img class="cube" src="/pics/tempcubert.jpg" alt="walk">
 </section>
 
 
@@ -145,11 +145,11 @@
     </p>
     <div class="items">
       {#each found as type (type)}
-        <img class="item" style="--item:{type}" src="/pics/chicken.png" alt="{type} found">
+        <img class="item" style="--item:{type}" src="/pics/{type}.jpg" alt="{type} found">
       {/each}
       <div class="item" style="--item:pot">
         <h2>Currently stirring: {stirs}</h2>
-        <img src="/pics/chicken.png" alt="Mixing pot" id="potimg">
+        <img src="/pics/pot.gif" alt="Mixing pot" id="potimg">
       </div>
     </div>
   </div>

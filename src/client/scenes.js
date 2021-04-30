@@ -4,14 +4,14 @@ export default {
   },
   puzzle(arg) {
     return {
-      image: "/pics/puzzle1.png",
+      image: "/pics/puzzle1.jpg",
       prompt: "What do you think this means?",
       answer: "AEFH"
     }
   },
   picture(arg) {
     return {
-      image: `pics/${arg}.png`
+      image: `pics/${arg}.jpg`
     }
   },
   action(arg) {
