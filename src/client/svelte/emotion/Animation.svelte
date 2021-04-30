@@ -2,8 +2,7 @@
   import { getContext } from "svelte";
   import { act } from "../stores.js";
 
-  const { getWs } = getContext('main');
-  const ws = getWs();
+  const { getHostWs } = getContext('main');
 
   let puzzlecheck = "Try it";
 
@@ -19,28 +18,29 @@
   let found = [];
   let stirs = 0;
 
-  ws.addEventListener("message", (event) => {
+  getHostWs().addToListeners("message", (event) => {
     const flag = event.data.split("=");
     switch (flag[0]) {
       case "found": {
-        console.log(flag);
-        found = [...found, flag[1]];
-        break;
+        if (!found.includes(flag[1])) {found = [...found, flag[1]]};
         console.log(found);
+        break;
       }
       case "stirStart": {
         stirs += 1;
         if (stirs > 4) {
           act.jumpLines();
-          ws.send("Done");
+          getHostWs().trySend("Done");
         }
         break;
       }
       case "stirStop": {
         stirs -= 1;
-      }
-      default:
         break;
+      }
+      default: {
+        break;
+      }
     };
   });
 </script>

@@ -1,24 +1,23 @@
 <script>
+  import { wsConnect } from "./stores.js";
   const url = window.location.href.split('/');
 
   const color = "#AAA";
   let done = false;
 
-  const ws = new WebSocket(`ws://REPLACE_HOSTNAME/ws/ActiveCurious?main=${url[3]}`);
-  ws.addEventListener("open", (event) => {
-    ws.send(`found=${url[4]}`);
+  const getPhoneWs = wsConnect(`ws://REPLACE_HOSTNAME/ws/ActiveCurious?main=${url[3]}`);
+  getPhoneWs().addToListeners("open", (event) => {
+    getPhoneWs().trySend(`found=${url[4]}`);
   });
 
-  ws.addEventListener("message", (e) => {
-    console.log("Message received:", e.data);
-
+  getPhoneWs().addToListeners("message", (e) => {
     if (e.data === "Done") {
       done = true;
     }
   });
 
   function stirring (e) {
-    ws.send(`stirStart=${url[4]}`);
+    getPhoneWs().trySend(`stirStart=${url[4]}`);
   }
 </script>
 
