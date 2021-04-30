@@ -50,7 +50,7 @@
 
 <main style="--color:{color}">
   {#if DEBUGMODE}
-  <button class="debug" on:click={() => {getPhoneWs().trySend("debug=close")}}>Close it!</button>
+  <button class="debug" on:click={() => {getPhoneWs().trySend("debug=close")}}>Crash Host!</button>
   {/if}
   {#if !done}
   <h1>You found the...</h1>

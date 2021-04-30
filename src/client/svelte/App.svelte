@@ -4,9 +4,8 @@
   import Animation from "./emotion/Animation.svelte";
 
   const getHostWs = wsConnect('ws://REPLACE_HOSTNAME/ws');
-  const getWs2 = DEBUGMODE ? wsConnect('ws://REPLACE_HOSTNAME/ws') : undefined;
 
-  setContext('main', { getHostWs, getWs2 });
+  setContext('main', { getHostWs });
 
   function jumper(e) {
     if (Array.from(document.querySelectorAll(".debug")).includes(e.target.parentElement)) return;
@@ -63,9 +62,8 @@
   <Animation/>
   {#if DEBUGMODE}
   <div class="debug">
-    <button on:click={() => {getWs2().raw.close()}}>Close WS2</button>
-    <button on:click={() => {getHostWs().trySend("Sent thru 1!")}}>Contextless ws.send()</button>
-    <button on:click={() => {getWs2().trySend("Sent thru 2!")}}>Contextless ws2.send()</button>
+    <button on:click={() => {getHostWs().raw.close()}}>Simulate ws crash</button>
+    <button on:click={() => {getHostWs().trySend("Sent thru debug UI!")}}>Send test msg</button>
   </div>
   {/if}
   {#if !($act.currLine[0] === "")}
