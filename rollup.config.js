@@ -32,21 +32,22 @@ function serve() {
 }
 
 const basePlugins = [
-  svelte({
-    compilerOptions: {
-      // enable run-time checks when not in production
-      dev: !production
-    }
+  // Insert hostname in frontend files
+  replace({
+    preventAssignment: true,
+    'REPLACE_HOSTNAME': `${process.env.HOSTNAME}`,
+    'ws://': () => process.env.NODE_ENV === 'production' ? 'wss://' : 'ws://',
+    'REPLACE_DEBUG': () => process.env.NODE_ENV === 'production' ? 'false' : 'true',
   }),
 
   // Parse scene.md file into the stores.js file
   screenwriter({ scenes: scenesConfig }),
 
-  // Insert hostname in frontend files
-  replace({
-    preventAssignment: true,
-    'REPLACE_HOSTNAME': `${process.env.HOSTNAME}`,
-    'ws://': () => process.env.NODE_ENV === 'production' ? 'wss://' : 'ws://'
+  svelte({
+    compilerOptions: {
+      // enable run-time checks when not in production
+      dev: !production
+    }
   }),
 
   // If you have external dependencies installed from
@@ -83,10 +84,6 @@ export default [
     // we'll extract any component CSS out into
     // a separate file - better for performance
     css({ output: 'game.css' }),
-
-    // In dev mode, call `npm run start` once
-    // the bundle has been generated
-    !production && serve()
   ],
   watch: {
     clearScreen: false
@@ -125,6 +122,10 @@ export default [
     // we'll extract any component CSS out into
     // a separate file - better for performance
     css({ output: 'activeCurious.css' }),
+
+    // In dev mode, call `npm run start` once
+    // the bundle has been generated
+    !production && serve(),
   ],
   watch: {
     clearScreen: false
