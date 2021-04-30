@@ -331,7 +331,7 @@ wsActiveCurious.on('connection', (socket, req) => {
     // Logging
     console.log(`\x1b[33mMobile of ${query.room} sent: \x1b[31m${message}\x1b[0m`);
 
-    currSession.host.send(message);
+    if (currSession.host !== undefined) {currSession.host.send(message)};
   });
 
   // Remove from phone from sessions when WebSocket closes
