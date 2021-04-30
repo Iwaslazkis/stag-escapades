@@ -17,7 +17,14 @@ const wsServers = [];
 const wsHost = createWsServer('/host');
 const wsActiveCurious = createWsServer('/ws/ActiveCurious');
 
-// { room: string, expiry: Date, host: WebSocket, phones: WebSocket[] }[]
+// [] = evens: rooms, odds: keys
+const roomKeys = [
+  "111", "penguins1",
+  "203", "panda2",
+  "212", "gecko3",
+];
+
+// { room: string, key: string, expiry: Date, host: WebSocket, phones: WebSocket[] }[]
 const sessions = [];
 
 
@@ -106,7 +113,25 @@ function rejectSuspiciousWs(socket, req, room) {
   };
 };
 
+function getKey(room) {
+  const i = roomKeys.findIndex(entry => entry === room);
+  // confirm its actually a room
+  if ((i % 2) !== 0 || i === 0) {
+    return undefined;
+  } else {
+    return roomKeys[i + 1];
+  };
+};
 
+function getRoom(key) {
+  const i = roomKeys.findIndex(entry => entry === key);
+  // confirm its actually a key
+  if (i % 2 === 0 || i === -2) {
+    return undefined;
+  } else {
+    return roomKeys[i - 1];
+  };
+};
 
 
 
@@ -121,7 +146,8 @@ app.use((req, res, next) => {
   if (noCookies.length === 1) {
     noCookies = (noCookies[0][0] === '' && noCookies[0][0] === noCookies[0][1]) ? true : false;
   };
-  console.log(noCookies ? "" : `\x1b[35m${cookies.session}:`,
+  const room = getRoom(cookies.session);
+  console.log(noCookies ? "" : `\x1b[35m${room}:`,
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
@@ -131,7 +157,30 @@ app.use((req, res, next) => {
 
 // Game Start Form Handler
 app.post("/", (req, res) => {
-  if (req.body["room"] === undefined) {
+/*
+  hacked -> 404
+  first (confirmed: false) ->
+  if empty -> error else if in keyRooms -> room else -> wrongKeyError
+  second (confirmed: true) -> Redirect & session create
+*/
+  // Perhaps does not work for firstSubmit
+  if (req.body["key"] === undefined || req.body["confirmed"] === undefined) {
+    res.status(404).send("<h1>Nice try, but don't mess with the form code ;)</h1>");
+    return;
+  };
+
+  const room = getRoom(req.body["key"]);
+  if (room === undefined) {
+    res.json({ errormsg: 'Wrong code! Are you sure you typed it in correctly?' });
+    return;
+  };
+
+  if (req.body["confirmed"] === "false") {
+    res.json({ room });
+    return;
+  };
+
+  if (req.body["confirmed"] !== "true") {
     res.status(404).send("<h1>Nice try, but don't mess with the form code ;)</h1>");
     return;
   };
@@ -139,25 +188,26 @@ app.post("/", (req, res) => {
   const expires = new Date();
   const duration = 2; // in Hours
   expires.setHours(expires.getHours() + duration);
-  const currSession = sessions.find(session => session.room === req.body["room"]);
+  const currSession = sessions.find(session => session.room === room);
   if (currSession === undefined) {
     sessions.push({
-      room: req.body["room"],
+      room: room,
+      key: req.body["key"],
       expiry: expires,
-      timeoutID: setTimeout(dropSession(req.body["room"]), duration * 1000 * 60 * 60),
+      timeoutID: setTimeout(dropSession(room), duration * 1000 * 60 * 60),
       host: undefined,
       phones: []
     });
   } else {
     clearTimeout(currSession.timeoutID);
     currSession.expiry = expires;
-    currSession.timeoutID = setTimeout(dropSession(req.body["room"]), duration * 1000 * 60 * 60);
+    currSession.timeoutID = setTimeout(dropSession(room), duration * 1000 * 60 * 60);
   };
 
-  console.log(`\x1b[35mRoom ${encodeURIComponent(req.body["room"])} started a game!`);
+  console.log(`\x1b[35mRoom ${room} started a game!`);
   res.writeHead(302, {
     Location: '/game',
-    'Set-Cookie': `session=${encodeURIComponent(req.body["room"])};Expires=${expires.toGMTString()};`
+    'Set-Cookie': `session=${encodeURIComponent(req.body["key"])};Expires=${expires.toGMTString()};`
   });
   res.end();
 });
@@ -197,7 +247,7 @@ app.get('/:room([0-9]+)/:event', (req, res) => {
 // Redirect if not logged in
 app.get('/game', (req, res) => {
   const cookies = parseCookies(req.headers.cookie);
-  const isLoggedIn = sessions.find(session => session.room === cookies.session);
+  const isLoggedIn = sessions.find(session => session.key === cookies.session);
   if (isLoggedIn !== undefined) {
     fs.readFile("public/game.html", "utf8", (err, data) => {
       if (err) throw err;
@@ -225,16 +275,17 @@ const server = app.listen(port, host, () => {
 //Host WebSocket Server
 wsHost.on('connection', (socket, req) => {
   const cookies = parseCookies(req.headers.cookie);
-  const currSession = sessions.find(session => session.room === cookies.session);
+  const room = getRoom(cookies.session);
+  const currSession = sessions.find(session => session.key === cookies.session);
   if (currSession === undefined) {
-    rejectSuspiciousWs(socket, req, cookies.session);
+    rejectSuspiciousWs(socket, req, room);
     return;
   };
 
   currSession.host = socket;
 
   //Logging
-  console.log("\x1b[33m" + cookies.session + " connected a WS on:",
+  console.log("\x1b[33m" + room + " connected a WS on:",
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
@@ -243,7 +294,7 @@ wsHost.on('connection', (socket, req) => {
 
   socket.on('message', message => {
     // Logging
-    console.log(`\x1b[33m${cookies.session} sent: \x1b[31m${message}\x1b[0m`);
+    console.log(`\x1b[33m${room} sent: \x1b[31m${message}\x1b[0m`);
 
     for (const phone of currSession.phones) {
       phone.send(message);
@@ -252,7 +303,7 @@ wsHost.on('connection', (socket, req) => {
 
   // Remove from sessions when WebSocket closes
   socket.on("close", (code, reason) => {
-    console.log(`\x1b[33m${cookies.session} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
+    console.log(`\x1b[33m${room} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
     currSession.host = undefined;
   });
 });
