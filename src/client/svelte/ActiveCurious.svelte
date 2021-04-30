@@ -1,5 +1,5 @@
 <script>
-  import { wsConnect } from "./utils.js";
+  import { wsConnect, DEBUGMODE } from "./utils.js";
   const url = window.location.href.split('/');
 
   const color = "#AAA";
@@ -30,6 +30,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--color);
+    position: relative;
   }
 
   h1 {
@@ -39,9 +40,18 @@
   img {
     width: 100%;
   }
+
+  .debug {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
 </style>
 
 <main style="--color:{color}">
+  {#if DEBUGMODE}
+  <button class="debug" on:click={() => {getPhoneWs().trySend("debug=close")}}>Close it!</button>
+  {/if}
   {#if !done}
   <h1>You found the...</h1>
   <img src="/pics/{"chicken"}.png" alt="{url[4]}!">

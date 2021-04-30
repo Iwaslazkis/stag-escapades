@@ -1,8 +1,8 @@
 <script>
   import { getContext } from "svelte";
-  import { act } from "../utils.js";
+  import { act, DEBUGMODE } from "../utils.js";
 
-  const { getHostWs } = getContext('main');
+  const { getHostWs, getWs2 } = getContext('main');
 
   let puzzlecheck = "Try it";
 
@@ -39,6 +39,7 @@
         break;
       }
       default: {
+        if (DEBUGMODE && flag[0] === "debug") { getHostWs().raw.close(); };
         break;
       }
     };
@@ -113,7 +114,27 @@
   .cube {
     margin: 60vh;
   }
+
+  div.debug {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
+
+  {#if DEBUGMODE}
+  <div class="debug">
+    <button on:click={() => {getHostWs().raw.close()}}>Close WS1</button>
+    <button on:click={() => {getHostWs().trySend("Nested sent thru 1!")}}>Nested: Contextless ws.send()</button>
+    <button on:click={() => {getWs2().trySend("Nested sent thru 2!")}}>Nested: Contextless ws2.send()</button>
+  </div>
+  {/if}
+
 
 {#if $act.currLine[1] === "happy"}
 <section >

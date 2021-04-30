@@ -1,5 +1,7 @@
 import script from "../script.md";
 
+export const DEBUGMODE = REPLACE_DEBUG;
+
 let current = {
   ...script[0],
   currLine: script[0].lines[0],
