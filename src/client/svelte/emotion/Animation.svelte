@@ -6,7 +6,7 @@
   const dispatch = createEventDispatcher();
 
   let puzzlecheck = "Try it";
-  $: activityType = $act.currLine[1] === "activity" ? $act.currLine[2].activity : undefined;
+  $: actionOptions = $act.currLine[2];
 
   let guess = '';
   function checker(e) {
@@ -119,12 +119,11 @@
 </style>
 
 
-{#if $act.currLine[1] === "happy"}
-<section >
-  <img class="cube" src="/pics/tempcubert.jpg" alt="walk">
+
+{#if $act.currLine[1] === "picture"}
+<section>
+  <img class="cube" src={actionOptions.image} alt="walk">
 </section>
-
-
 {:else if $act.currLine[1] === "puzzle"}
 <section>
   <img src={$act.currLine[2].image} alt="puzzle">
@@ -137,7 +136,7 @@
 
 
 {:else if $act.currLine[1] === "activity"}
-  {#if activityType === "ActiveCurious"}
+  {#if actionOptions.activity === "ActiveCurious"}
   <section>
     <div class="activity">
       <h2>Let's make some Chicken Noodle Soup!</h2>
@@ -157,8 +156,12 @@
       </div>
     </div>
   </section>
-  {:else if activityType === "PositiveSocial"}
+  {:else if actionOptions.activity === "PositiveSocial"}
   <div></div>
   {/if}
+{:else}
+<section>
+  <img class="cube" src="/pics/tempcubert.jpg" alt="walk">
+</section>
 {/if}
 
