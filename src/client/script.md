@@ -19,7 +19,7 @@ Anyway have you seen him, he looks like this
 
 #PICTURE: puzzloonie
 
-#happy
+#Happy
 He likes to spend his time on tables in schools around sharp objects
 
 #Devastated
@@ -36,7 +36,7 @@ Here go through this door while I think of something we can do
 #ACT: room 1
 
 #ReadingWhileTalking
-Alright, I have searched the limits of human knowledge on sickness
+Alright, I have searched the limits of human knowledge on the best way to help Puzzlooni
 
 #Happy
 And it appears that there seems to be one universal cure
@@ -135,22 +135,25 @@ Well thank you for trying to cheer me up but I'm still upset about--
 Puzzloonie!??!!?
 
 #Concerned
-Puzzloonie: Woah Cubert calm down. What's wrong buddy
+Puzzloonie: Woah Cubert calm down. What's wrong buddy?
 
 #Happy
 Cubert: I thought you got popped.
 
-#Confused
-Puzzloonie: What? No, why would you think that?
+#Reassuring
+Puzzloonie: Oh that balloon? Silly Cubert! I look nothing like that balloon.
 
-#Confused
-Puzzloonie: On a separate note have you seen my balloon? I can't find it anywhere.
+#Reassuring
+Puzzloonie: Plus, real life balloons aren't alive. It's just some rubber with a face drawn on it!
 
-#Happy
-Cubert: Well I'm glad that you're ok!
+#Relieved
+Cubert: Well that's a relief, I'm glad that you're ok!
 
 #Happy
 Cubert: Come on, let's go home.
+
+#StageThing
+*Play Seinfeld music*
 
 #End
 Congrats, you finished!
