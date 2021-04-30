@@ -14,10 +14,10 @@ const port = +process.env.PORT;
 const app = express();
 
 const wsServers = [];
-const wsMain = createWsServer('/ws');
+const wsHost = createWsServer('/host');
 const wsActiveCurious = createWsServer('/ws/ActiveCurious');
 
-// { session: string, main: WebSocket, phones: WebSocket[] }[]
+// { room: string, host: WebSocket, phones: WebSocket[] }[]
 const sessions = [];
 
 
@@ -55,21 +55,21 @@ function bigLog(req, cookOrSocket, mode = 'http') {
   if (env !== "production") {env = "development"};
   switch (mode + "_" + env) {
     case "http_production": {
-      console.log({ cookies: cookOrSocket, sessions: sessions });
+      console.log({ cookies: cookOrSocket, sessions });
       break;
     }
     case "ws_production": {
-      console.log({ sessions: sessions });
+      console.log({ sessions });
       break;
     }
     case "http_development": {
       console.log({ request: req, cookies: cookOrSocket });
-      console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+      console.log({ sessions, "ws.clients": wsHost.clients });
       break;
     }
     case "ws_development": {
       console.log({ request: req, socket: cookOrSocket });
-      console.log({ sessions: sessions, "ws.clients": wsMain.clients });
+      console.log({ sessions, "ws.clients": wsHost.clients });
       break;
     }
   }
@@ -112,15 +112,15 @@ app.post("/", (req, res) => {
 });
 
 // Phone links
-app.get('/:main([0-9]+)/:event', (req, res) => {
-  const { main, event } = req.params;
+app.get('/:room([0-9]+)/:event', (req, res) => {
+  const { room, event } = req.params;
   switch (event) {
     case "pot":
     case "chicken":
     case "noodles":
     case "broth":
     case "water": {
-      if (sessions.find(session => session.session === main) === undefined) {
+      if (sessions.find(session => session.room === room) === undefined) {
         res.status(404).send("<h1>Wait until your class starts the game!</h1>");
         break;
       }
@@ -128,7 +128,7 @@ app.get('/:main([0-9]+)/:event', (req, res) => {
       const expires = new Date();
       expires.setHours(expires.getHours() + 2);
 
-      // res.writeHead(200, {'Set-Cookie': `main=${encodeURIComponent(main)};Expires=${expires.toGMTString()};`});
+      // res.writeHead(200, {'Set-Cookie': `room=${encodeURIComponent(room)};Expires=${expires.toGMTString()};`});
 
       fs.readFile("public/activity/activeCurious.html", "utf8", (err, data) => {
         if (err) throw err;
@@ -156,14 +156,14 @@ const server = app.listen(port, host, () => {
 
 
 //=========WEBSOCKETS=========
-//Main WebSocket Server
-wsMain.on('connection', (socket, req) => {
+//Host WebSocket Server
+wsHost.on('connection', (socket, req) => {
   const cookies = parseCookies(req.headers.cookie);
   const timestamp = new Date();
   sessions.push({
-    session: cookies.session,
+    room: cookies.session,
     timestamp: timestamp,
-    main: socket,
+    host: socket,
     phones: []
   });
   const currSession = sessions.find(session => session.timestamp === timestamp);
@@ -196,11 +196,11 @@ wsMain.on('connection', (socket, req) => {
 // ActiveCurious WebSocket Server
 wsActiveCurious.on('connection', (socket, req) => {
   const query = req.url.includes("?") ? qs.parse(req.url.substring(req.url.indexOf("?") + 1)) : qs.parse("");
-  const currSession = sessions.find(session => session.session === query.main);
+  const currSession = sessions.find(session => session.room === query.room);
   currSession.phones.push(socket);
 
   //Logging
-  console.log("\x1b[33mMobile connected to " + query.main + " with a WS on:",
+  console.log("\x1b[33mMobile connected to " + query.room + " with a WS on:",
               "\x1b[32m" + req.url,
               "\x1b[36m" + formattedDate(),
               "\x1b[0m");
@@ -209,14 +209,14 @@ wsActiveCurious.on('connection', (socket, req) => {
 
   socket.on('message', message => {
     // Logging
-    console.log(`\x1b[33mMobile of ${query.main} sent: \x1b[31m${message}\x1b[0m`);
+    console.log(`\x1b[33mMobile of ${query.room} sent: \x1b[31m${message}\x1b[0m`);
 
-    currSession.main.send(message);
+    currSession.host.send(message);
   });
 
   // Remove from phone from sessions when WebSocket closes
   socket.on("close", (code, reason) => {
-    console.log(`\x1b[33mMobile of ${query.main} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
+    console.log(`\x1b[33mMobile of ${query.room} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
     const index = currSession.phones.findIndex(ws => ws === socket);
     if (index > -1) currSession.phones.splice(index, 1);
     console.log(currSession, sessions)

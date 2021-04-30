@@ -5,7 +5,7 @@
   const color = "#AAA";
   let done = false;
 
-  const getPhoneWs = wsConnect(`ws://REPLACE_HOSTNAME/ws/ActiveCurious?main=${url[3]}`);
+  const getPhoneWs = wsConnect(`ws://REPLACE_HOSTNAME/ws/ActiveCurious?room=${url[3]}`);
   getPhoneWs().addToListeners("open", (event) => {
     getPhoneWs().trySend(`found=${url[4]}`);
   });

@@ -3,7 +3,7 @@
   import { act, wsConnect, DEBUGMODE } from "./utils.js";
   import Animation from "./emotion/Animation.svelte";
 
-  const getHostWs = wsConnect('ws://REPLACE_HOSTNAME/ws');
+  const getHostWs = wsConnect('ws://REPLACE_HOSTNAME/host');
 
   setContext('main', { getHostWs });
 
