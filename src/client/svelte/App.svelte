@@ -1,6 +1,6 @@
 <script>
   import { setContext } from "svelte";
-  import { act, wsConnect } from "./stores.js";
+  import { act, wsConnect } from "./utils.js";
   import Animation from "./emotion/Animation.svelte";
 
   const getHostWs = wsConnect('ws://REPLACE_HOSTNAME/ws');

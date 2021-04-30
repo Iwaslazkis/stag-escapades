@@ -1,6 +1,6 @@
 <script>
   import { getContext } from "svelte";
-  import { act } from "../stores.js";
+  import { act } from "../utils.js";
 
   const { getHostWs } = getContext('main');
 

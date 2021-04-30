@@ -1,5 +1,5 @@
 <script>
-  import { wsConnect } from "./stores.js";
+  import { wsConnect } from "./utils.js";
   const url = window.location.href.split('/');
 
   const color = "#AAA";
