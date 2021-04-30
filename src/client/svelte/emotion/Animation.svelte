@@ -143,7 +143,7 @@
       <p>
         Look for the ingredients (chicken, noodles, broth, and water) around the room!
         Each one will have a link on it: once you find it, go to the link on your phone and
-        begin stirring it in!
+        begin stirring it in! At least 6 of you need to stir to finish the soup.
       </p>
       <div class="items">
         {#each found as type (type)}
