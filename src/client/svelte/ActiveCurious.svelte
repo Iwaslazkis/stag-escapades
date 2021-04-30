@@ -4,6 +4,7 @@
 
   const color = "#AAA";
   let done = false;
+  let stirred = false;
 
   const getPhoneWs = wsConnect(`ws://REPLACE_HOSTNAME/ws/ActiveCurious?room=${url[3]}`);
   getPhoneWs().addToListeners("open", (event) => {
@@ -17,7 +18,10 @@
   });
 
   function stirring (e) {
-    getPhoneWs().trySend(`stirStart=${url[4]}`);
+    if (!stirred) {
+      getPhoneWs().trySend(`stirStart=${url[4]}`);
+      stirred = true;
+    }
   }
 </script>
 

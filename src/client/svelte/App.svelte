@@ -7,9 +7,18 @@
 
   setContext('main', { getHostWs });
 
+  let buffer = 0;
   function jumper(e) {
-    if (Array.from(document.querySelectorAll(".debug")).includes(e.target.parentElement)) return;
+    console.log("main got clicked");
+    if (e.target !== null) {if (Array.from(document.querySelectorAll(".debug")).includes(e.target.parentElement)) return};
     if (!($act.currLine[1] === "puzzle" || $act.currLine[1] == "activity")) {
+      if (buffer > 0) { buffer -= 1; console.log("Buffer used:", buffer); return; };
+      console.log("normal jump");
+      getHostWs().trySend(`Jumped from: Scene ID ${$act.id}, Line ID ${$act.currLineID}`);
+      act.jumpLines();
+    } else if (e.detail.type === "puzact") {
+      console.log("puzzle or activity");
+      buffer += 1;
       getHostWs().trySend(`Jumped from: Scene ID ${$act.id}, Line ID ${$act.currLineID}`);
       act.jumpLines();
     }
@@ -59,7 +68,7 @@
 </style>
 
 <main on:click={jumper}>
-  <Animation/>
+  <Animation on:proceed={jumper}/>
   {#if DEBUGMODE}
   <div class="debug">
     <button on:click={() => {getHostWs().raw.close()}}>Simulate ws crash</button>

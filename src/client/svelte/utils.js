@@ -32,16 +32,16 @@ export const act = {
 
     if (remainder > 0) {
       //Switch acts if lines overflowed
-      current = {
-        ...script[script.indexOf(currAct) + 1],
-        currLine: current.lines[remainder - 1],
-        currLineID: remainder - 1
-      };
+      current = { ...script[script.indexOf(currAct) + 1] };
+      current.currLine = current.lines[remainder - 1];
+      current.currLineID = remainder - 1;
+
       console.log("Went to next act:", current);
     } else {
       current.currLine = current.lines[current.currLineID];
     }
 
+    console.log(current);
     notify(current);
   },
 

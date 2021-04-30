@@ -1,16 +1,18 @@
 <script>
-  import { getContext } from "svelte";
+  import { getContext, createEventDispatcher } from "svelte";
   import { act, DEBUGMODE } from "../utils.js";
 
   const { getHostWs } = getContext('main');
+  const dispatch = createEventDispatcher();
 
   let puzzlecheck = "Try it";
+  $: activityType = $act.currLine[1] === "activity" ? $act.currLine[2].activity : undefined;
 
-  let guess;
+  let guess = '';
   function checker(e) {
     e.preventDefault();
     if (guess.toUpperCase() === $act.currLine[2].answer) {
-      act.jumpLines();
+      dispatch('proceed', { type: "puzact" });
     } else {
       puzzlecheck = "Please try again!";
     }
@@ -27,9 +29,9 @@
         break;
       }
       case "stirStart": {
-        stirs += 1;
-        if (stirs > 4) {
-          act.jumpLines();
+        if (stirs <= 5) {stirs += 1;};
+        if (stirs > 4 && found.length === 4) {
+          dispatch('proceed', { type: "puzact" });
           getHostWs().trySend("Done");
         }
         break;
@@ -135,24 +137,28 @@
 
 
 {:else if $act.currLine[1] === "activity"}
-<section>
-  <div class="activity">
-    <h2>Let's make some Chicken Noodle Soup!</h2>
-    <p>
-      Look for the ingredients (chicken, noodles, broth, and water) around the room!
-      Each one will have a link on it: once you find it, go to the link on your phone and
-      begin stirring it in!
-    </p>
-    <div class="items">
-      {#each found as type (type)}
+  {#if activityType === "ActiveCurious"}
+  <section>
+    <div class="activity">
+      <h2>Let's make some Chicken Noodle Soup!</h2>
+      <p>
+        Look for the ingredients (chicken, noodles, broth, and water) around the room!
+        Each one will have a link on it: once you find it, go to the link on your phone and
+        begin stirring it in!
+      </p>
+      <div class="items">
+        {#each found as type (type)}
         <img class="item" style="--item:{type}" src="/pics/{type}.jpg" alt="{type} found">
-      {/each}
-      <div class="item" style="--item:pot">
-        <h2>Currently stirring: {stirs}</h2>
-        <img src="/pics/pot.gif" alt="Mixing pot" id="potimg">
+        {/each}
+        <div class="item" style="--item:pot">
+          <h2>Currently stirring: {stirs}</h2>
+          <img src="/pics/pot.gif" alt="Mixing pot" id="potimg">
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+  {:else if activityType === "PositiveSocial"}
+  <div></div>
+  {/if}
 {/if}
 
