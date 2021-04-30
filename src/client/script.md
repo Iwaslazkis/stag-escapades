@@ -85,19 +85,8 @@ After looking through the knowledge of the worlds once more I have a new plan
 #Happy
 I found a small balloon repair shop just over that way
 
-#Worried
-The only problem is that there's just a small... giant ravine in between us and the shop
-
 #Happy
-But not to worry! I can send you some pieces to build a bridge
-
-#Encouraging
-You will have to work together to build that bridge as fast as you can!
-
-#ACTIVITY: PositiveSocial
-
-#Happy
-Good work! Now let's head inside and repair Puzzloonie
+Now let's head inside and repair Puzzloonie
 
 #Happy
 Oh there's a sign on the door
@@ -131,20 +120,16 @@ Ok I just need to... I uh... I
 I don't know what to do
 
 #Sad
-What can I do at this point
+What can I even do at this point...
 
 #Sad
-I can't think of anything
-
-#Sad
-I could really use some cheering up
-
-#ACTIVITY: MindfulPurposeful
+Well, you know what?
 
 #Sad/Happy
-Well thank you for trying to cheer me up but I'm still upset about
+Well thank you for trying to cheer me up but I'm still upset about--
 
-#ACTION: ShowPuzzloonie
+#Puzloonie
+*Puzzloonie walks in from the side*
 
 #Shocked
 Puzzloonie!??!!?
@@ -167,4 +152,5 @@ Cubert: Well I'm glad that you're ok!
 #Happy
 Cubert: Come on, let's go home.
 
-#ACTION: ShowEndScreen
+#End
+Congrats, you finished!
