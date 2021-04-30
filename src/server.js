@@ -17,7 +17,7 @@ const wsServers = [];
 const wsHost = createWsServer('/host');
 const wsActiveCurious = createWsServer('/ws/ActiveCurious');
 
-// { room: string, host: WebSocket, phones: WebSocket[] }[]
+// { room: string, expiry: Date, host: WebSocket, phones: WebSocket[] }[]
 const sessions = [];
 
 
@@ -75,6 +75,37 @@ function bigLog(req, cookOrSocket, mode = 'http') {
   }
 };
 
+function dropSession(room) {
+  return () => {
+    const index = sessions.findIndex(session => session.room === room);
+    // Clean up open WS's first
+    if (index > -1) {
+      sessions.splice(index, 1);
+    } else { // Never should run:
+      console.log(`\x1b[31m${room} has NO SESSION!!\x1b[0m`)
+    }
+  };
+};
+
+function rejectSuspiciousWs(socket, req, room) {
+  const main = () => {
+    socket.send(`Room ${room} not logged in.`);
+    socket.close();
+
+    console.log("\x1b[33m" + room + " \x1b[31mSUSPICIOUSLY \x1b[33mtried to connect a WS on:",
+                "\x1b[32m" + req.url,
+                "\x1b[36m" + formattedDate(),
+                "\x1b[0m");
+    bigLog(req, socket, "ws");
+  };
+
+  if (socket.readyState === WebSocket.OPEN) {
+    main();
+  } else {
+    socket.on('open', main);
+  };
+};
+
 
 
 
@@ -100,8 +131,28 @@ app.use((req, res, next) => {
 
 // Game Start Form Handler
 app.post("/", (req, res) => {
+  if (req.body["room"] === undefined) {
+    res.status(404).send("<h1>Nice try, but don't mess with the form code ;)</h1>");
+    return;
+  };
+
   const expires = new Date();
-  expires.setHours(expires.getHours() + 2);
+  const duration = 2; // in Hours
+  expires.setHours(expires.getHours() + duration);
+  const currSession = sessions.find(session => session.room === req.body["room"]);
+  if (currSession === undefined) {
+    sessions.push({
+      room: req.body["room"],
+      expiry: expires,
+      timeoutID: setTimeout(dropSession(req.body["room"]), duration * 1000 * 60 * 60),
+      host: undefined,
+      phones: []
+    });
+  } else {
+    clearTimeout(currSession.timeoutID);
+    currSession.expiry = expires;
+    currSession.timeoutID = setTimeout(dropSession(req.body["room"]), duration * 1000 * 60 * 60);
+  };
 
   console.log(`\x1b[35mRoom ${encodeURIComponent(req.body["room"])} started a game!`);
   res.writeHead(302, {
@@ -143,6 +194,21 @@ app.get('/:room([0-9]+)/:event', (req, res) => {
   }
 });
 
+// Redirect if not logged in
+app.get('/game', (req, res) => {
+  const cookies = parseCookies(req.headers.cookie);
+  const isLoggedIn = sessions.find(session => session.room === cookies.session);
+  if (isLoggedIn !== undefined) {
+    fs.readFile("public/game.html", "utf8", (err, data) => {
+      if (err) throw err;
+      res.send(data);
+    });
+  } else {
+    res.writeHead(302, { Location: '/' });
+    res.end();
+  }
+});
+
 // Static files
 app.use(express.static('public'));
 
@@ -159,14 +225,13 @@ const server = app.listen(port, host, () => {
 //Host WebSocket Server
 wsHost.on('connection', (socket, req) => {
   const cookies = parseCookies(req.headers.cookie);
-  const timestamp = new Date();
-  sessions.push({
-    room: cookies.session,
-    timestamp: timestamp,
-    host: socket,
-    phones: []
-  });
-  const currSession = sessions.find(session => session.timestamp === timestamp);
+  const currSession = sessions.find(session => session.room === cookies.session);
+  if (currSession === undefined) {
+    rejectSuspiciousWs(socket, req, cookies.session);
+    return;
+  };
+
+  currSession.host = socket;
 
   //Logging
   console.log("\x1b[33m" + cookies.session + " connected a WS on:",
@@ -188,8 +253,7 @@ wsHost.on('connection', (socket, req) => {
   // Remove from sessions when WebSocket closes
   socket.on("close", (code, reason) => {
     console.log(`\x1b[33m${cookies.session} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
-    const index = sessions.findIndex(session => session.timestamp === timestamp);
-    if (index > -1) sessions.splice(index, 1);
+    currSession.host = undefined;
   });
 });
 
@@ -197,6 +261,11 @@ wsHost.on('connection', (socket, req) => {
 wsActiveCurious.on('connection', (socket, req) => {
   const query = req.url.includes("?") ? qs.parse(req.url.substring(req.url.indexOf("?") + 1)) : qs.parse("");
   const currSession = sessions.find(session => session.room === query.room);
+  if (currSession === undefined) {
+    rejectSuspiciousWs(socket, req, query.room);
+    return;
+  };
+
   currSession.phones.push(socket);
 
   //Logging
@@ -218,8 +287,13 @@ wsActiveCurious.on('connection', (socket, req) => {
   socket.on("close", (code, reason) => {
     console.log(`\x1b[33mMobile of ${query.room} disconnected: \x1b[31m${code} ${reason}\x1b[0m`)
     const index = currSession.phones.findIndex(ws => ws === socket);
-    if (index > -1) currSession.phones.splice(index, 1);
-    console.log(currSession, sessions)
+    if (index > -1) {
+      currSession.phones.splice(index, 1);
+    } else { // Never should run:
+      console.log(`\x1b[31mMobile of \x1b[33m${query.room}\x1b[31m had NO SESSION??\x1b[0m`);
+      console.log(socket);
+    };
+    console.log(currSession, sessions);
   });
 });
 
