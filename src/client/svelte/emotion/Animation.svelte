@@ -113,20 +113,41 @@
     height: 400px;
   }
 
-  .cube {
-    margin: 60vh;
+  div.cube-wrapper > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35vw;
+  }
+
+  div.cube-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+  }
+
+  .bubble {
+    position: absolute;
+    top: 0%;
+    width: calc(100% - 2vw);
+    margin: 1.5vh 1vw auto;
+    border: 1px solid hsla(0, 0.00%, 78.00%, 1.00);
+    border-radius: 14px;
+    background-image: linear-gradient(to bottom, white, hsla(0, 0.00%, 86.00%, 1.00));
   }
 </style>
 
 
 
 {#if $act.currLine[1] === "picture"}
-<section>
-  <img class="cube" src={actionOptions.image} alt="walk">
-</section>
+<div class="cube-wrapper">
+  <img draggable="false" src={actionOptions.image} alt="walk">
+</div>
 {:else if $act.currLine[1] === "puzzle"}
 <section>
-  <img src={$act.currLine[2].image} alt="puzzle">
+  <img draggable="false" src={$act.currLine[2].image} alt="puzzle">
   <h2>{$act.currLine[2].prompt}</h2>
   <form action="">
     <input class="text" type="text" name="" id="" bind:value={guess}>
@@ -136,32 +157,36 @@
 
 
 {:else if $act.currLine[1] === "activity"}
-  {#if actionOptions.activity === "ActiveCurious"}
-  <section>
-    <div class="activity">
-      <h2>Let's make some Chicken Noodle Soup!</h2>
-      <p>
-        Look for the ingredients (chicken, noodles, broth, and water) around the room!
-        Each one will have a link on it: once you find it, go to the link on your phone and
-        begin stirring it in! At least 6 of you need to stir to finish the soup.
-      </p>
-      <div class="items">
-        {#each found as type (type)}
-        <img class="item" style="--item:{type}" src="/pics/{type}.jpg" alt="{type} found">
-        {/each}
-        <div class="item" style="--item:pot">
-          <h2>Currently stirring: {stirs}</h2>
-          <img src="/pics/pot.gif" alt="Mixing pot" id="potimg">
-        </div>
+{#if actionOptions.activity === "ActiveCurious"}
+<section>
+  <div class="activity">
+    <h2>Let's make some Chicken Noodle Soup!</h2>
+    <p>
+      Look for the ingredients (chicken, noodles, broth, and water) around the room!
+      Each one will have a link on it: once you find it, go to the link on your phone and
+      begin stirring it in! At least 6 of you need to stir to finish the soup.
+    </p>
+    <div class="items">
+      {#each found as type (type)}
+      <img draggable="false" class="item" style="--item:{type}" src="/pics/{type}.png" alt="{type} found">
+      {/each}
+      <div class="item" style="--item:pot">
+        <h2>Currently stirring: {stirs}</h2>
+        <img draggable="false" src="/pics/pot.gif" alt="Mixing pot" id="potimg">
       </div>
     </div>
-  </section>
-  {:else if actionOptions.activity === "PositiveSocial"}
-  <div></div>
-  {/if}
-{:else}
-<section>
-  <img class="cube" src="/pics/tempcubert.jpg" alt="walk">
+  </div>
 </section>
+{:else if actionOptions.activity === "PositiveSocial"}
+<div></div>
+{/if}
+
+{:else}
+<div class="cube-wrapper">
+  <img draggable="false" src="/pics/cubert/{$act.currLine[1]}.png" alt="{$act.currLine[1]}">
+</div>
+<div class="bubble">
+  <h1>{$act.currLine[0]}</h1>
+</div>
 {/if}
 

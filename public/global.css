@@ -1,3 +1,7 @@
+:root {
+    --bg-color: #93D073;
+}
+
 html, body {
     position: relative;
     width: 100%;

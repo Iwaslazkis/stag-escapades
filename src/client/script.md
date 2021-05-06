@@ -35,7 +35,7 @@ Here go through this door while I think of something we can do
 
 #ACT: room 1
 
-#ReadingWhileTalking
+#encouraging
 Alright, I have searched the limits of human knowledge on the best way to help Puzzlooni
 
 #Happy
@@ -55,7 +55,8 @@ Find them, and make some chicken noodle soup for Puzzloonie!
 #happy
 Great! Now let's give some of that delicious soup to my friend
 
-#PICTURE: soupOnBalloonQuestionMark
+#waiting
+...
 
 #Happy
 See he's looking better already...
