@@ -20,7 +20,7 @@ Anyway have you seen him, he looks like this
 #PICTURE: puzzloonie
 
 #Happy
-He likes to spend his time on tables in schools around sharp objects
+He likes to spend his time on tables in school classrooms
 
 #Devastated
 He got popped! OH NO
@@ -125,6 +125,9 @@ What can I even do at this point...
 #Sad
 Well, you know what?
 
+#Sad
+I could use some cheering up
+
 #Sad/Happy
 Well thank you for trying to cheer me up but I'm still upset about--
 
@@ -156,4 +159,6 @@ Cubert: Come on, let's go home.
 *Play Seinfeld music*
 
 #End
-Congrats, you finished!
+Congrats, you finished! Created by Diogo Iwaslaski, Mckay Hutchinson, Sera ____, and Spencer Bater
+
+
