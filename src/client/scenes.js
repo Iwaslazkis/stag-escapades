@@ -17,7 +17,7 @@ export default {
       case "WordScramble": {
         result = {
           image: "scramble",
-          prompt: "What do you think this means?",
+          prompt: "Unscramble the word",
           answer: ["POSITIVE"]
         };
         break;
@@ -25,7 +25,7 @@ export default {
       case "Hieroglyph": {
         result = {
           image: "hieroglyph.png",
-          prompt: "What do you think this means?",
+          prompt: "Decode the missing words!",
           answer: ["HAPPY"]
         };
         break;

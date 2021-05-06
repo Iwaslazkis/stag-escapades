@@ -6,6 +6,8 @@
 
 #PUZZLE: WordScramble
 
+#ACTIVITY: ActiveCurious
+
 #Startled
 Woah there pal, you startled me!
 
@@ -34,8 +36,6 @@ Well there must be something we can do to help him
 
 #Encouraging
 Here go through this door while I think of something we can do
-
-#PUZZLE: Door2
 
 #ACT: room 1
 
@@ -78,8 +78,6 @@ But don't worry I have another idea
 #Encouraging
 Here go through this door and I'll tell you about it
 
-#PUZZLE: Door3
-
 #ACT: room 2
 
 #Happy
@@ -105,8 +103,6 @@ Which is commonly know throughout the 7oaks school division as period B
 
 #Thinking
 Ok, ok don't panic... here go through this door while I think of something
-
-#PUZZLE: Door4
 
 #ACT: room 3
 
@@ -157,9 +153,6 @@ Cubert: Well that's a relief, I'm glad that you're ok!
 
 #Happy
 Cubert: Come on, let's go home.
-
-#StageThing
-*Play Seinfeld music*
 
 #End
 Congrats, you finished! Created by Diogo Iwaslaski, Mckay Hutchinson, Sera ____, and Spencer Bater
