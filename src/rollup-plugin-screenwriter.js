@@ -32,7 +32,8 @@ function parse (script, config) {
       // New Line (#<Emotion>\n<Line>)
     } else {
       let line = el.split('\n').reverse();
-      line[1] = line[1].replace("#", "").toLowerCase();
+      line[2] = line[1].replace("#", "").toLowerCase();
+      line[1] = "dialogue";
       parsed[parsed.length - 1].lines.push(line);
     }
   });

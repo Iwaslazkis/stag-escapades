@@ -2,6 +2,11 @@ import script from "../script.md";
 
 export const DEBUGMODE = REPLACE_DEBUG;
 
+
+
+
+
+
 let current = {
   ...script[0],
   currLine: script[0].lines[0],
@@ -39,13 +44,17 @@ export const act = {
       console.log("Went to next act:", current);
     } else {
       current.currLine = current.lines[current.currLineID];
+      console.log(current);
     }
 
-    console.log(current);
     notify(current);
   },
 
 };
+
+
+
+
 
 export function wsConnect(path, listeners = []) {
   let socket;
@@ -93,3 +102,29 @@ export function wsConnect(path, listeners = []) {
     };
   };
 };
+
+
+
+
+// Adapted from (Source): https://svelte.dev/tutorial/custom-js-transitions
+export function typewriter(node, { speed = 20 }) {
+  const valid = (
+    node.childNodes.length === 1 &&
+    node.childNodes[0].nodeType === Node.TEXT_NODE
+  );
+
+  if (!valid) {
+    throw new Error(`This transition only works on elements with a single text node child`);
+  }
+
+  const text = node.textContent;
+  const duration = text.length * speed;
+
+  return {
+    duration,
+    tick: t => {
+      const i = ~~(text.length * t);
+      node.textContent = text.slice(0, i);
+    }
+  };
+}

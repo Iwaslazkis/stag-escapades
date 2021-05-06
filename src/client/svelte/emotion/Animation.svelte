@@ -1,6 +1,6 @@
 <script>
   import { getContext, createEventDispatcher } from "svelte";
-  import { act, DEBUGMODE } from "../utils.js";
+  import { act, DEBUGMODE, typewriter } from "../utils.js";
 
   const { getHostWs } = getContext('main');
   const dispatch = createEventDispatcher();
@@ -132,6 +132,7 @@
     position: absolute;
     top: 0%;
     width: calc(100% - 2vw);
+    min-height: 80px;
     margin: 1.5vh 1vw auto;
     border: 1px solid hsla(0, 0.00%, 78.00%, 1.00);
     border-radius: 14px;
@@ -183,10 +184,12 @@
 
 {:else}
 <div class="cube-wrapper">
-  <img draggable="false" src="/pics/cubert/{$act.currLine[1]}.png" alt="{$act.currLine[1]}">
+  <img draggable="false" src="/pics/cubert/{$act.currLine[2]}.png" alt="{$act.currLine[2]}">
 </div>
 <div class="bubble">
-  <h1>{$act.currLine[0]}</h1>
+  {#key $act.currLine[0]}
+    <h1 in:typewriter on:introend={() => {dispatch('typingDone')}}>{$act.currLine[0]}</h1>
+  {/key}
 </div>
 {/if}
 

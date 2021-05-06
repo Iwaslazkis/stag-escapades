@@ -4,24 +4,21 @@
   import Animation from "./emotion/Animation.svelte";
 
   const getHostWs = wsConnect('ws://REPLACE_HOSTNAME/host');
-
   setContext('main', { getHostWs });
 
-  let buffer = 0;
+  let typing = false;
+
   function jumper(e) {
     console.log("main got clicked");
     if (e.target !== null) {if (Array.from(document.querySelectorAll(".debug")).includes(e.target.parentElement)) return};
-    if (!($act.currLine[1] === "puzzle" || $act.currLine[1] == "activity")) {
-      if (buffer > 0) { buffer -= 1; console.log("Buffer used:", buffer); return; };
-      console.log("normal jump");
-      getHostWs().trySend(`Jumped from: Scene ID ${$act.id}, Line ID ${$act.currLineID}`);
-      act.jumpLines();
-    } else if (e.detail.type === "puzact") {
-      console.log("puzzle or activity");
-      buffer += 1;
+
+    if (typing) { console.log("Still typing!"); return; };
+
+    if (!($act.currLine[1] === "puzzle" || $act.currLine[1] === "activity") || e.detail.type === "puzact") {
       getHostWs().trySend(`Jumped from: Scene ID ${$act.id}, Line ID ${$act.currLineID}`);
       act.jumpLines();
     }
+    if ($act.currLine[1] === "dialogue") {typing = true};
   };
 </script>
 
@@ -31,13 +28,6 @@
     width: 100%;
     height: 100%;
     user-select: none;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
   }
 
   div.debug {
@@ -59,7 +49,10 @@
 </style>
 
 <main on:click={jumper}>
-  <Animation on:proceed={jumper}/>
+  <Animation
+    on:proceed={e => {typing = false; jumper(e)}}
+    on:typingDone={() => {typing = false;}}
+  />
   {#if DEBUGMODE}
   <div class="debug">
     <button on:click={() => {getHostWs().raw.close()}}>Simulate ws crash</button>
