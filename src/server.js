@@ -22,6 +22,7 @@ const roomKeys = [
   "111", "penguins1",
   "203", "panda2",
   "212", "gecko3",
+  "STAG staff", "giraffe45",
 ];
 
 // { room: string, key: string, expiry: Date, host: WebSocket, phones: WebSocket[] }[]
