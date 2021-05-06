@@ -66,6 +66,13 @@
     justify-content: center;
   }
 
+  .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
   @media (min-width: 640px) {
     main {
       max-width: none;
@@ -84,9 +91,10 @@
 
 
   {#if !started}
-    <h1>Loading</h1>
-    <button disabled={!loaded} on:click={startGame}>Start!</button>
-
+    <section class="container">
+      <h1>{!loaded ? "Loading" : "Loaded!"}</h1>
+      <button disabled={!loaded} on:click={startGame}>Start!</button>
+  </section>
 
   {:else}
     <Animation

@@ -10,9 +10,17 @@
 
   let guess = '';
   function checker(e) {
-    e.preventDefault();
-    if (guess.toUpperCase() === $act.currLine[2].answer) {
+    let cleaned;
+    if ($act.currLine[2].image === "general") {
+      cleaned = guess.toUpperCase().includes("BE") ? guess.toUpperCase().substring(3) : guess.toUpperCase();
+    } else if ($act.currLine[2].image === "scramble" || $act.currLine[2].image === "hieroglyph.png") {
+      cleaned = guess.toUpperCase();
+    }
+
+
+    if ($act.currLine[2].answer.includes(cleaned)) {
       dispatch('proceed', { type: "puzact" });
+      guess = '';
     } else {
       puzzlecheck = "Please try again!";
     }
@@ -51,10 +59,12 @@
 <style>
   section {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: var(--bg-color);
   }
 
   form {
@@ -138,6 +148,23 @@
     border-radius: 14px;
     background-image: linear-gradient(to bottom, white, hsla(0, 0.00%, 86.00%, 1.00));
   }
+
+  .puzzle-container {
+    width: 75vw;
+    max-height: 80vh;
+    text-align: center;
+  }
+
+  .puzzle-container > img {
+    width: 100%;
+    object-fit: contain;
+    max-height: 100%;
+    margin-bottom: 1em;
+  }
+
+  .puzzle-container + h2 {
+    margin-top: 1em;
+  }
 </style>
 
 
@@ -146,15 +173,34 @@
 <div class="cube-wrapper">
   <img draggable="false" src={actionOptions.image} alt="walk">
 </div>
+
+
+
+
+
 {:else if $act.currLine[1] === "puzzle"}
 <section>
-  <img draggable="false" src={$act.currLine[2].image} alt="puzzle">
+  <div class="puzzle-container">
+    {#if $act.currLine[2].image === "general"}
+      <h1>What is one of the 6 pillars of positive mental health?</h1>
+    {:else if $act.currLine[2].image === "scramble"}
+      <h1>sotvpeii</h1>
+    {:else if $act.currLine[2].image === "hieroglyph.png"}
+      <img draggable="false" src="/pics/{$act.currLine[2].image}" alt="{$act.currLine[2].image}">
+    {:else}
+      <img draggable="false" src={$act.currLine[2].image} alt="{$act.currLine[2].image}">
+    {/if}
+  </div>
+
   <h2>{$act.currLine[2].prompt}</h2>
   <form action="">
     <input class="text" type="text" name="" id="" bind:value={guess}>
-    <button class="submit" on:click={checker}>{puzzlecheck}</button>
+    <button class="submit" on:click|preventDefault={checker}>{puzzlecheck}</button>
   </form>
 </section>
+
+
+
 
 
 {:else if $act.currLine[1] === "activity"}
@@ -181,6 +227,10 @@
 {:else if actionOptions.activity === "PositiveSocial"}
 <div></div>
 {/if}
+
+
+
+
 
 {:else}
 <div class="cube-wrapper">

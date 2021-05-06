@@ -1,6 +1,10 @@
 #ACT: intro
 
-#PUZZLE: Door1
+#PUZZLE: General
+
+#PUZZLE: Hieroglyph
+
+#PUZZLE: WordScramble
 
 #Startled
 Woah there pal, you startled me!
@@ -49,8 +53,6 @@ I'm pretty sure I had seen some ingredients for it in your classroom
 
 #Happy
 Find them, and make some chicken noodle soup for Puzzloonie!
-
-#ACTIVITY: ActiveCurious
 
 #happy
 Great! Now let's give some of that delicious soup to my friend
