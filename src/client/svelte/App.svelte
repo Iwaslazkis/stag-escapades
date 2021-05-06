@@ -3,10 +3,35 @@
   import { act, wsConnect, DEBUGMODE } from "./utils.js";
   import Animation from "./emotion/Animation.svelte";
 
+  let [typing, loaded, started, paused ] = Array(4).fill(false);
+  if (DEBUGMODE) {paused = true};
+
   const getHostWs = wsConnect('ws://REPLACE_HOSTNAME/host');
   setContext('main', { getHostWs });
 
-  let typing = false;
+  const audioCtx = new AudioContext();
+  let audio;
+  fetch("/coconut_shores.mp3")
+    .then(data => data.arrayBuffer())
+    .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
+    .then(decodedAudio => { audio = decodedAudio; loaded = true; });
+
+
+
+  function startGame() {
+    // Play song (Source: https://youtu.be/3NgVlAscdcA)
+    if (!paused) {
+      const playSound = audioCtx.createBufferSource();
+      playSound.buffer = audio;
+      playSound.connect(audioCtx.destination);
+      playSound.start(audioCtx.currentTime);
+      playSound.loop = true;
+    }
+
+
+    started = true;
+  }
+
 
   function jumper(e) {
     console.log("main got clicked");
@@ -49,15 +74,25 @@
 </style>
 
 <main on:click={jumper}>
-  <Animation
-    on:proceed={e => {typing = false; jumper(e)}}
-    on:typingDone={() => {typing = false;}}
-  />
   {#if DEBUGMODE}
   <div class="debug">
     <button on:click={() => {getHostWs().raw.close()}}>Simulate ws crash</button>
     <button on:click={() => {getHostWs().trySend("Sent thru debug UI!")}}>Send test msg</button>
+    <button on:click={() => {paused = !paused}}>{paused ? "Paused" : "Playing"} song</button>
   </div>
+  {/if}
+
+
+  {#if !started}
+    <h1>Loading</h1>
+    <button disabled={!loaded} on:click={startGame}>Start!</button>
+
+
+  {:else}
+    <Animation
+    on:proceed={e => {typing = false; jumper(e)}}
+    on:typingDone={() => {typing = false;}}
+    />
   {/if}
 </main>
 
