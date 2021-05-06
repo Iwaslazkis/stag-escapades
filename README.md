@@ -8,6 +8,6 @@ Requires node & npm to be installed. Git is recommended though not required.
 
 1. Clone/fork this repo locally.
 2. Setup a `.env` in the root directory using `template.env` as a guide (make sure to remove all `#` comments before saving).
-3. Run `npm install`.
+3. Run `npm ci`.
 
 To start development server, run `npm run dev`, and to make production build, run `npm run build`.
