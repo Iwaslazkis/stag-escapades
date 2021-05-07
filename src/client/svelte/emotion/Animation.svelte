@@ -13,7 +13,7 @@
     let cleaned;
     if ($act.currLine[2].image === "general") {
       cleaned = guess.toUpperCase().includes("BE") ? guess.toUpperCase().substring(3) : guess.toUpperCase();
-    } else if ($act.currLine[2].image === "scramble" || $act.currLine[2].image === "hieroglyph.png") {
+    } else {
       cleaned = guess.toUpperCase();
     }
 
@@ -21,6 +21,7 @@
     if ($act.currLine[2].answer.includes(cleaned)) {
       dispatch('proceed', { type: "puzact" });
       guess = '';
+      puzzlecheck = "Try it";
     } else {
       puzzlecheck = "Please try again!";
     }
@@ -165,6 +166,19 @@
   .puzzle-container + h2 {
     margin-top: 1em;
   }
+
+  .flexer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2em;
+    font-size: 1.5em;
+  }
+
+  .flexer > h2 {
+    margin: auto 1em;
+  }
 </style>
 
 
@@ -182,15 +196,23 @@
 <section>
   <div class="puzzle-container">
     {#if $act.currLine[2].image === "general"}
-      <h1>What is one of the 6 pillars of positive mental health?</h1>
+      <h1 style="font-size: 2.5em;">What is one of the 6 pillars of positive mental health?</h1>
     {:else if $act.currLine[2].image === "scramble"}
-      <h1>sotvpeii</h1>
+      <h1 style="font-size: 3em;">sotvpeii</h1>
     {:else if $act.currLine[2].image === "hieroglyph.png"}
       <img draggable="false" src="/pics/{$act.currLine[2].image}" alt="{$act.currLine[2].image}">
-    {:else}
-      <img draggable="false" src={$act.currLine[2].image} alt="{$act.currLine[2].image}">
+    {:else if $act.currLine[2].image !== "riddle"}
+    <img draggable="false" src={$act.currLine[2].image} alt="{$act.currLine[2].image}">
     {/if}
   </div>
+
+  {#if $act.currLine[2].image === "riddle"}
+  <div class="flexer">
+    <h2>I am a state but not part of a country. I am a part of a human thought, and relate to the brain.<br>What am I?</h2>
+    <h2>I am a subject in schools, and some schools are even dedicated just for me, but you want to make sure to take care of me.<br>What am I?</h2>
+    <h2>The number 7 is associated with me and though I sound like the opposite of strong, I am very important.<br>What am I?</h2>
+  </div>
+  {/if}
 
   <h2>{$act.currLine[2].prompt}</h2>
   <form action="">

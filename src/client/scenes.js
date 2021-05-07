@@ -17,7 +17,7 @@ export default {
       case "WordScramble": {
         result = {
           image: "scramble",
-          prompt: "Unscramble the word",
+          prompt: "Unscramble the word!",
           answer: ["POSITIVE"]
         };
         break;
@@ -25,8 +25,16 @@ export default {
       case "Hieroglyph": {
         result = {
           image: "hieroglyph.png",
-          prompt: "Decode the missing words!",
+          prompt: "Decode the missing word!",
           answer: ["HAPPY"]
+        };
+        break;
+      }
+      case "Riddle": {
+        result = {
+          image: "riddle",
+          prompt: "Solve each riddle to assemble the 3-word phrase!",
+          answer: ["MENTAL HEALTH WEEK"]
         };
         break;
       }
