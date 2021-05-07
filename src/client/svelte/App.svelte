@@ -92,9 +92,15 @@
 
   {#if !started}
     <section class="container">
-      <h1>{!loaded ? "Loading" : "Loaded!"}</h1>
-      <button disabled={!loaded} on:click={startGame}>Start!</button>
-  </section>
+      <h1>Instructions: </h1>
+      <h1>1. To progress the story during dialogue,<br> just click anywhere on the screen.</h1>
+      <h1>2. Make sure your sound is on!</h1>
+      <br>
+      <div>
+        <h3>{!loaded ? "Loading..." : "Loaded!"}</h3>
+        <button disabled={!loaded} on:click={startGame}>Start!</button>
+      </div>
+    </section>
 
   {:else}
     <Animation

@@ -124,10 +124,18 @@
     height: 400px;
   }
 
-  div.cube-wrapper > img {
+  div.cube-wrapper > img.cubert {
     position: absolute;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35vw;
+  }
+
+  div.cube-wrapper > img.puzzloonie {
+    position: absolute;
+    top: 50%;
+    left: 80%;
     transform: translate(-50%, -50%);
     width: 35vw;
   }
@@ -185,7 +193,7 @@
 
 {#if $act.currLine[1] === "picture"}
 <div class="cube-wrapper">
-  <img draggable="false" src={actionOptions.image} alt="walk">
+  <img class="cubert" draggable="false" src={actionOptions.image} alt="walk">
 </div>
 
 
@@ -233,7 +241,7 @@
     <p>
       Look for the ingredients (chicken, noodles, broth, and water) around the room!
       Each one will have a link on it: once you find it, go to the link on your phone and
-      begin stirring it in! At least 6 of you need to stir to finish the soup.
+      begin stirring it in! At least 5 of you need to stir to finish the soup.
     </p>
     <div class="items">
       {#each found as type (type)}
@@ -255,13 +263,21 @@
 
 
 {:else}
-<div class="cube-wrapper">
-  <img draggable="false" src="/pics/cubert/{$act.currLine[2]}.png" alt="{$act.currLine[2]}">
-</div>
-<div class="bubble">
-  {#key $act.currLine[0]}
-    <h1 in:typewriter on:introend={() => {dispatch('typingDone')}}>{$act.currLine[0]}</h1>
-  {/key}
-</div>
+  {#if typeof $act.currLine[2] !== "object"}
+  <div class="cube-wrapper">
+      <img class="cubert" draggable="false" src="/pics/cubert/{$act.currLine[2]}.png" alt="{$act.currLine[2]}">
+  </div>
+  {:else}
+  <div class="cube-wrapper">
+    <img class="cubert" draggable="false" src="/pics/cubert/{$act.currLine[2].cubert}.png" alt="{$act.currLine[2].cubert}">
+    <img class="puzzloonie" draggable="false" src="/pics/puzzloonie/{$act.currLine[2].puzzloonie}.png" alt="{$act.currLine[2].puzzloonie}">
+  </div>
+  {/if}
+
+  <div class="bubble">
+    {#key $act.currLine[0]}
+      <h1 in:typewriter on:introend={() => {dispatch('typingDone')}}>{$act.currLine[0]}</h1>
+    {/key}
+  </div>
 {/if}
 

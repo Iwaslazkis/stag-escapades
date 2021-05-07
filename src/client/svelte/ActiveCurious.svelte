@@ -58,8 +58,8 @@
   {/if}
   {#if !done}
   <h1>You found the...</h1>
+  <button on:click={stirring}>Press me to stir!</button>
   <img src="/pics/{url[4]}.png" alt="{url[4]}!">
-  <button on:click={stirring}>Now stir it in (Literally!)</button>
   {:else}
   <h1>Awesome mixing! Here's the soup:</h1>
   <img src="/pics/soup.png" alt="The chicken noodle soup">

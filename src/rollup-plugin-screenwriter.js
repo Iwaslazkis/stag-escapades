@@ -34,6 +34,10 @@ function parse (script, config) {
       let line = el.split('\n').reverse();
       line[2] = line[1].replace("#", "").toLowerCase();
       line[1] = "dialogue";
+      if (line[2].includes("&")) {
+        line[2] = line[2].split('&');
+        line[2] = {cubert: line[2][0], puzzloonie: line[2][1]}
+      };
       parsed[parsed.length - 1].lines.push(line);
     }
   });
